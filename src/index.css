@@ -1,0 +1,220 @@
+@import "tailwindcss";
+
+/* ── Font Faces ── */
+
+@font-face {
+  font-family: 'NGT Vina Sans Neue';
+  src: url('./assets/fonts/NGTVinaSans-Neue.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABC ROM';
+  src: url('/assets/fonts/ABCROM-Light-Trial.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC ROM';
+  src: url('/assets/fonts/ABCROM-LightItalic-Trial.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC ROM';
+  src: url('/assets/fonts/ABCROM-Book-Trial.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC ROM';
+  src: url('/assets/fonts/ABCROM-BookItalic-Trial.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC ROM';
+  src: url('/assets/fonts/ABCROM-Regular-Trial.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC ROM';
+  src: url('/assets/fonts/ABCROM-Medium-Trial.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC ROM';
+  src: url('/assets/fonts/ABCROM-Bold-Trial.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC ROM';
+  src: url('/assets/fonts/ABCROM-Black-Trial.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Theme Tokens ── */
+
+@theme {
+  --color-page: #f7f7f7;
+  --color-dark: #131313;
+  --color-dark-muted: rgba(19, 19, 19, 0.55);
+  --color-grey-line: rgba(201, 201, 201, 0.3);
+  --color-accent-pink: #ff0cf0;
+  --color-accent-orange: #ffb103;
+  --color-accent-blue: #00b5fc;
+  --color-accent-red: #ff0000;
+  --color-accent-gold: #f4c24f;
+  --color-accent-teal: #00C4A7;
+  --color-accent-salmon: #FF6B4A;
+  --color-accent-magenta: #E040FB;
+
+  --font-heading: 'NGT Vina Sans Neue', 'Vina Sans', cursive;
+  --font-body: 'ABC ROM', 'Inter', system-ui, sans-serif;
+}
+
+/* ── Base Styles ── */
+
+html {
+  zoom: 0.9;
+  scroll-behavior: smooth;
+  background-color: #f7f7f7; /* same as --color-page; paints the overscroll bounce area in Chrome */
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  background-color: transparent;
+  overscroll-behavior: none;
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--color-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Logo Ticker ── */
+
+@keyframes ticker {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.animate-ticker {
+  animation: ticker 60s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+@keyframes ticker-reverse {
+  0%   { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+.animate-ticker-reverse {
+  animation: ticker-reverse 55s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Pause only the hovered row */
+.ticker-row:hover .animate-ticker,
+.ticker-row:hover .animate-ticker-reverse {
+  animation-play-state: paused;
+}
+
+/* ── Typography Scale ──────────────────────────────────────────────────────
+   Edit here to change sizes site-wide. Each class maps to one role.
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* Section headings — "Our People", "The Numbers" etc. */
+.type-section-heading {
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-dark);
+}
+
+/* Large body copy — About, WhatMakesUs paragraphs */
+.type-body-lg {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--color-dark);
+}
+
+/* Base body copy — testimonials, bios */
+.type-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--color-dark);
+}
+
+/* Bold name label — team cards, testimonial names */
+.type-card-name {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-dark);
+  color: var(--color-dark);
+}
+
+/* Muted role/caption — job titles, company names */
+.type-card-role {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-dark-muted);
+}
+
+/* Stat labels — numbers section */
+.type-stat-label {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-dark);
+}
+
+/* Attribution & links — quote attribution, footer links, CTA text */
+.type-ui {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--color-dark);
+}
+
+/* ── Gradient Text ── */
+
+.gradient-text {
+  background: linear-gradient(90deg, #ff0cf0, #ffb103, #00b5fc);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 4s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}

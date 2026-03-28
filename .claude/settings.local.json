@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install -D tailwindcss @tailwindcss/vite)",
+      "Bash(curl -sfo hero-bg.png \"http://localhost:3845/assets/9e41ad0852a09fee175461e2e3ae0d46fd8e6d09.png\")",
+      "Bash(curl -sfo publicis.png \"http://localhost:3845/assets/1e372a93ea61847c801d21a5638adff22df70f59.png\")",
+      "Bash(curl -sfo saatchi.png \"http://localhost:3845/assets/c52eaa0566eda57bc9d6b250e4babae9142f5944.png\")",
+      "Bash(curl -sfo sky.png \"http://localhost:3845/assets/88739cc95fe3f17d25e19b2484fccf49999756d7.png\")",
+      "Bash(curl -sfo new-project.png \"http://localhost:3845/assets/71b4c9c89c2678a0a33a43f76aaee2b4982178e1.png\")",
+      "Bash(curl -sfo grayling.png \"http://localhost:3845/assets/dc26a267e2ea395e06582f13586c223aeba2ff1d.png\")",
+      "Bash(curl -sfo who-we-are.png \"http://localhost:3845/assets/b47db98625ff803e5656d5c7ead97dee0b3af56b.png\")",
+      "Bash(curl -sfo team-nick.png \"http://localhost:3845/assets/6428141ee89d2b94ba89ab1d4b9fdedd30eba5f8.png\")",
+      "Bash(curl -sfo team-sophie.png \"http://localhost:3845/assets/d794e0f286be069bd8b563cd56dfa3a6ffef6e5b.png\")",
+      "Bash(curl -sfo team-kirsten.png \"http://localhost:3845/assets/b99df5630b991679cd23d5f636666ca5f8d6dbca.png\")",
+      "Bash(curl -sfo testimonial-andrew.png \"http://localhost:3845/assets/6374b20342befa7f59e653be9e7822a74205ce11.png\")",
+      "Bash(curl -sfo testimonial-nik.png \"http://localhost:3845/assets/587bc804c026be889fa9d3173378f9486c2f38cc.png\")",
+      "Bash(curl -sfo testimonial-dan.png \"http://localhost:3845/assets/63270ed1fdaf3f2adbcee5476a28bfa88a23f668.png\")",
+      "Bash(curl -sfo testimonial-caroline.png \"http://localhost:3845/assets/67edaa3418e6035a6941bf2402d00192b317435b.png\")",
+      "Bash(curl -sfo testimonial-suzanne.png \"http://localhost:3845/assets/dbfbe1ecfce12463ace9a8be68bd326858315466.png\")",
+      "Bash(curl -sfo testimonial-mark.png \"http://localhost:3845/assets/adb7c07df22fb61baabf5b222702b88b9d49508f.png\")",
+      "Bash(curl -sfo testimonial-bart.png \"http://localhost:3845/assets/1ddfb26fe8a2c6952f30bbe47910fd8eff468f03.png\")",
+      "Bash(curl -sfo connector-down.svg \"http://localhost:3845/assets/022af86245243e6af71ab8279edd5005c1046249.svg\")",
+      "Bash(curl -sfo connector-up.svg \"http://localhost:3845/assets/09c9c8d38b66871117bc5f36a219ac111ae99bb5.svg\")",
+      "Bash(curl -sfo stat-donut.svg \"http://localhost:3845/assets/cf4a85d0500a11a45a597aa72e50eb2c6f9aa8d0.svg\")",
+      "Bash(curl -sfo stat-pie.svg \"http://localhost:3845/assets/2d2d7af2a755dcc7c5c2e06e537ce383110a3c4a.svg\")",
+      "Bash(curl -sfo stat-retention.svg \"http://localhost:3845/assets/40706f04297b392efa372d92d4a6d779470b0709.svg\")",
+      "Bash(curl -sfo hero-mask.svg \"http://localhost:3845/assets/2c7746c6b72ce274902cd2e228cd7297e89be0dd.svg\")",
+      "Bash(curl -sfo nav-arrows.svg \"http://localhost:3845/assets/2c1ed7f1deb9a162a1df9c6b1e57eb0466f62d31.svg\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(curl -s -o /dev/null -w %{http_code} http://localhost:5173/)",
+      "Bash(sed -i '' 's/font-weight: 450/font-weight: 400/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/index.css\")",
+      "Bash(sed -i '' 's/fontWeight: 450/fontWeight: 400/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/StyleGuide.tsx\")",
+      "Bash(sed -i '' 's/weight: 450/weight: 400/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/StyleGuide.tsx\")",
+      "Bash(sed -i '' 's/· 450 ·/· 400 ·/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/StyleGuide.tsx\")",
+      "Bash(sed -i '' 's/font-weight: 450/font-weight: 400/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/StyleGuide.tsx\")"
+    ]
+  }
+}
