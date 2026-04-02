@@ -312,18 +312,22 @@ export default function WhatMakesUs() {
   }, [containerW]);
 
   const isTablet = !isDesktop && !isCompact;
-  const desktopNarrativeW = Math.max(211, Math.min(560, containerW * 0.36));
+  const desktopRowGap = 20;
   const desktopCardsMinW = 945;
-  const cardsW = isDesktop ? Math.max(desktopCardsMinW, containerW - desktopNarrativeW - 40) : containerW;
-  const narrativeW = isDesktop ? Math.max(211, containerW - cardsW - 40) : containerW;
+  const desktopCardsMaxW = 1008;
+  const cardsW = isDesktop
+    ? Math.min(desktopCardsMaxW, Math.max(desktopCardsMinW, containerW - 211 - desktopRowGap))
+    : containerW;
+  const narrativeW = isDesktop ? Math.max(211, containerW - cardsW - desktopRowGap) : containerW;
   const gap = 20;
   const cardH = isCompact ? 352 : isTablet ? 380 : 420;
   const tabletInactiveW = Math.max(104, Math.min(122, Math.floor(cardsW * 0.12)));
   const desktopInactiveW = Math.max(122, Math.min(154, Math.floor(cardsW * 0.142)));
   const desktopActiveW = Math.max(320, cardsW - 4 * desktopInactiveW - 4 * gap);
   const tabletActiveW = Math.max(320, cardsW - 4 * tabletInactiveW - 4 * gap);
+  const tabletActiveCssW = `calc(100% - ${4 * tabletInactiveW + 4 * gap}px)`;
   const compactActiveW = Math.min(layoutW * 0.8, 383);
-  const activeW = isCompact ? compactActiveW : isTablet ? tabletActiveW : desktopActiveW;
+  const activeW = isCompact ? compactActiveW : isTablet ? tabletActiveCssW : desktopActiveW;
   const activeWNumber = isCompact ? compactActiveW : isTablet ? tabletActiveW : desktopActiveW;
   const inactiveFrameW = isCompact ? 154 : isTablet ? tabletInactiveW : desktopInactiveW;
   const collapsedFrameHeight = isCompact ? 352 : 352;
@@ -342,7 +346,7 @@ export default function WhatMakesUs() {
             className="flex"
             style={{
               flexDirection: isDesktop ? "row" : "column",
-              gap: isCompact ? 28 : 40,
+              gap: isDesktop ? desktopRowGap : isCompact ? 28 : 40,
               paddingTop: 24,
               paddingBottom: 24,
             }}
@@ -372,7 +376,6 @@ export default function WhatMakesUs() {
                 msOverflowStyle: isCompact ? "none" : undefined,
                 paddingBottom: isCompact ? 4 : 0,
                 paddingRight: isCompact ? "calc(12svw + 20px)" : 0,
-                width: isCompact ? "calc(100% + 40px)" : undefined,
                 marginRight: isCompact ? -40 : 0,
                 position: isCompact ? "sticky" : "static",
                 top: isCompact ? 20 : undefined,
@@ -382,6 +385,7 @@ export default function WhatMakesUs() {
                 scrollPaddingRight: isCompact ? "12svw" : undefined,
                 WebkitOverflowScrolling: "touch",
                 overscrollBehaviorX: isCompact ? "contain" : undefined,
+                width: isCompact ? "calc(100% + 40px)" : "100%",
               }}
               ref={isCompact ? compactRailRef : undefined}
               className={isCompact ? "hide-scrollbar" : undefined}
