@@ -16,6 +16,21 @@ import Footer from './components/Footer'
 function App() {
   const mainContentRef = useRef<HTMLDivElement>(null)
   const [lineRange, setLineRange] = useState<{ top: number; bottom: number } | null>(null)
+  const [viewportW, setViewportW] = useState(() => window.outerWidth || document.documentElement.clientWidth || window.innerWidth)
+
+  useEffect(() => {
+    const setViewportMetrics = () => {
+      document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`)
+      setViewportW(window.outerWidth || document.documentElement.clientWidth || window.innerWidth)
+    }
+
+    setViewportMetrics()
+    window.addEventListener('resize', setViewportMetrics)
+
+    return () => {
+      window.removeEventListener('resize', setViewportMetrics)
+    }
+  }, [])
 
   useEffect(() => {
     const updateLineRange = () => {
@@ -84,11 +99,15 @@ function App() {
 
       <Header />
 
-      {/* Hero + Logo Ticker — 100svh full-bleed container */}
+      {/* Hero + Logo Ticker — Safari-safe viewport height container */}
       <div
         id="hero-section"
         className="bg-page flex flex-col"
-        style={{ padding: "5px", height: "calc(100svh / 0.9)", gap: "6px" }}
+        style={{
+          padding: "5px",
+          height: viewportW < 900 ? "var(--app-height, 100svh)" : "calc(var(--app-height, 100svh) / 0.9)",
+          gap: "6px",
+        }}
       >
         <Hero />
         <LogoTicker />
@@ -99,7 +118,7 @@ function App() {
         {lineRange && (
           <div
             className="pointer-events-none absolute"
-            style={{ top: lineRange.top, bottom: lineRange.bottom, left: "50%", width: 1.5, backgroundColor: "#E9E9E9", zIndex: 0 }}
+            style={{ top: lineRange.top, bottom: lineRange.bottom, left: "50%", width: 1.5, backgroundColor: "#E9E9E9", zIndex: 0, transform: "translateX(-0.75px)" }}
           />
         )}
 

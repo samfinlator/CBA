@@ -14,6 +14,7 @@ export default function LineFrame({
   className = "",
   crossConnectorSrc,
   hideOuterVerticals = false,
+  rowDividerOffsets,
   children,
 }: {
   columns: number;
@@ -21,6 +22,7 @@ export default function LineFrame({
   className?: string;
   crossConnectorSrc?: string;
   hideOuterVerticals?: boolean;
+  rowDividerOffsets?: number[];
   children: React.ReactNode;
 }) {
   // Generate divider positions as percentages
@@ -29,10 +31,9 @@ export default function LineFrame({
     dividers.push((i / columns) * 100);
   }
 
-  const rowDividers: number[] = [];
-  for (let i = 1; i < rows; i++) {
-    rowDividers.push((i / rows) * 100);
-  }
+  const rowDividers = rowDividerOffsets && rowDividerOffsets.length === rows - 1
+    ? rowDividerOffsets
+    : Array.from({ length: rows - 1 }, (_, i) => ((i + 1) / rows) * 100);
 
   return (
     <div className={`relative ${className}`}>
@@ -90,13 +91,16 @@ export default function LineFrame({
       ))}
 
       {/* Horizontal divider lines */}
-      {rowDividers.map((pos) => (
-        <div
-          key={`row-${pos}`}
-          className="pointer-events-none absolute left-0 right-0 bg-grey-line"
-          style={{ top: `${pos}%`, height: 1.5, transform: "translateY(-50%)" }}
-        />
-      ))}
+      {rowDividers.map((pos, index) => {
+        const top = typeof pos === "number" && pos <= 100 ? `${pos}%` : `${pos}px`;
+        return (
+          <div
+            key={`row-${index}`}
+            className="pointer-events-none absolute left-0 right-0 bg-grey-line"
+            style={{ top, height: 1.5, transform: "translateY(-50%)" }}
+          />
+        );
+      })}
 
       {/* Top T-connectors */}
       {dividers.map((pos) => (
@@ -132,14 +136,16 @@ export default function LineFrame({
 
       {/* Middle cross connectors */}
       {crossConnectorSrc &&
-        rowDividers.flatMap((rowPos) =>
-          dividers.map((colPos) => (
-            <div key={`cross-${rowPos}-${colPos}`}>
+        rowDividers.flatMap((rowPos, rowIndex) =>
+          dividers.map((colPos) => {
+            const top = typeof rowPos === "number" && rowPos <= 100 ? `${rowPos}%` : `${rowPos}px`;
+            return (
+            <div key={`cross-${rowIndex}-${colPos}`}>
               <div
                 className="pointer-events-none absolute"
                 style={{
                   left: `${colPos}%`,
-                  top: `${rowPos}%`,
+                  top,
                   width: 40,
                   height: 1.5,
                   backgroundColor: "var(--color-page)",
@@ -151,7 +157,7 @@ export default function LineFrame({
                 className="pointer-events-none absolute"
                 style={{
                   left: `${colPos}%`,
-                  top: `${rowPos}%`,
+                  top,
                   width: 1.5,
                   height: 42,
                   backgroundColor: "var(--color-page)",
@@ -161,12 +167,12 @@ export default function LineFrame({
               />
               <div
                 className="pointer-events-none absolute"
-                style={{ left: `${colPos}%`, top: `${rowPos}%`, transform: "translate(-50%, -50%)", zIndex: 2 }}
+                style={{ left: `${colPos}%`, top, transform: "translate(-50%, -50%)", zIndex: 2 }}
               >
                 <img src={crossConnectorSrc} alt="" style={{ width: 20, height: 22 }} />
               </div>
             </div>
-          ))
+          );})
         )}
 
       {/* Content */}

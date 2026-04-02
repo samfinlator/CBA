@@ -1,46 +1,170 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import GradientCanvas from "./GradientCanvas";
 import { GRADIENT_SEED, GRADIENT_START_TIME } from "../gradientConfig";
 
 const MASK: React.CSSProperties = {
-  WebkitMaskImage:    "url('/assets/campbell-brown-logo.svg')",
-  WebkitMaskSize:     "contain",
-  WebkitMaskRepeat:   "no-repeat",
+  WebkitMaskImage: "url('/assets/campbell-brown-logo.svg')",
+  WebkitMaskSize: "contain",
+  WebkitMaskRepeat: "no-repeat",
   WebkitMaskPosition: "center",
-  maskImage:          "url('/assets/campbell-brown-logo.svg')",
-  maskSize:           "contain",
-  maskRepeat:         "no-repeat",
-  maskPosition:       "center",
+  maskImage: "url('/assets/campbell-brown-logo.svg')",
+  maskSize: "contain",
+  maskRepeat: "no-repeat",
+  maskPosition: "center",
 };
 
-
 const LINES = ["Campbell", "Brown", "Associates"];
+const CTA_LABEL = "Get In Touch";
+const CTA_FONT_WEIGHT = 700;
+const CTA_LINE_HEIGHT = 1;
+const CTA_MASK_PAD_Y = 1;
+
+function buildTextMask(width: number, height: number, text: string, fontSize: number, padX: number) {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <rect width="100%" height="100%" fill="transparent" />
+      <text
+        x="${padX}"
+        y="${height / 2}"
+        fill="white"
+        font-family="ABC ROM, Inter, system-ui, sans-serif"
+        font-size="${fontSize}"
+        font-weight="${CTA_FONT_WEIGHT}"
+        dominant-baseline="middle"
+      >${text}</text>
+    </svg>
+  `;
+
+  return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+}
+
+function HeaderCtaText({ clipPct, measureRef, mobile }: { clipPct: number; measureRef: React.RefObject<HTMLSpanElement | null>; mobile: boolean }) {
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const [maskImage, setMaskImage] = useState<string | null>(null);
+  const fontSize = mobile ? 13 : 16;
+  const padX = mobile ? 4 : 8;
+
+  useLayoutEffect(() => {
+    const el = measureRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      const width = Math.ceil(rect.width) + padX * 3;
+      const height = Math.ceil(rect.height) + CTA_MASK_PAD_Y * 2;
+      setSize({ width, height });
+      setMaskImage(buildTextMask(width, height, CTA_LABEL, fontSize, padX));
+    };
+
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [fontSize, padX]);
+
+  return (
+    <span
+      className="relative inline-block font-body overflow-hidden"
+      style={{
+        width: size.width || undefined,
+        height: size.height || undefined,
+        fontSize,
+        fontWeight: CTA_FONT_WEIGHT,
+        lineHeight: CTA_LINE_HEIGHT,
+        verticalAlign: "top",
+      }}
+    >
+      <span
+        ref={measureRef}
+        className="invisible absolute left-0 top-0 whitespace-nowrap pointer-events-none"
+        style={{ transform: `translate(${padX}px, ${CTA_MASK_PAD_Y}px)` }}
+      >
+        {CTA_LABEL}
+      </span>
+
+      {size.width > 0 && size.height > 0 && maskImage ? (
+        <>
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 overflow-hidden"
+            style={{
+              width: size.width,
+              height: size.height,
+              WebkitMaskImage: maskImage,
+              WebkitMaskSize: "100% 100%",
+              WebkitMaskRepeat: "no-repeat",
+              WebkitMaskPosition: "left top",
+              maskImage,
+              maskSize: "100% 100%",
+              maskRepeat: "no-repeat",
+              maskPosition: "left top",
+            }}
+          >
+            <GradientCanvas
+              className="h-full w-full"
+              seed={GRADIENT_SEED}
+              startTime={GRADIENT_START_TIME}
+            />
+          </span>
+
+          <span
+            aria-hidden="true"
+            className="absolute left-0 top-0 whitespace-nowrap"
+            style={{
+              color: "rgba(255,255,255,0.92)",
+              clipPath: `inset(0 0 ${clipPct}% 0)`,
+              transform: `translate(${padX}px, ${CTA_MASK_PAD_Y}px)`,
+            }}
+          >
+            {CTA_LABEL}
+          </span>
+        </>
+      ) : null}
+    </span>
+  );
+}
 
 export default function Header() {
-  const logoRef                         = useRef<HTMLDivElement>(null);
-  const [clipPct, setClipPct]           = useState(0);   // % clipped from bottom of white overlay
-  const [overHero, setOverHero]         = useState(true); // for wordmark / CTA colour
+  const logoRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLSpanElement>(null);
+  const [logoClipPct, setLogoClipPct] = useState(0);
+  const [ctaClipPct, setCtaClipPct] = useState(0);
+  const [layoutW, setLayoutW] = useState(() => window.outerWidth || document.documentElement.clientWidth || window.innerWidth);
+  const isContactPage = window.location.pathname === "/get-in-touch";
 
-  /* Live clip-path: clip tracks the inner gradient div's bottom edge (not the full
-     hero-section which includes LogoTicker + padding below the gradient). */
   useEffect(() => {
-    const heroInner   = document.getElementById("hero-inner");
+    const updateLayoutW = () => setLayoutW(window.outerWidth || document.documentElement.clientWidth || window.innerWidth);
+    window.addEventListener("resize", updateLayoutW);
+    return () => window.removeEventListener("resize", updateLayoutW);
+  }, []);
+
+  useEffect(() => {
+    const heroInner = document.getElementById("hero-inner");
     const heroSection = document.getElementById("hero-section");
     if (!heroInner || !heroSection) return;
 
     const update = () => {
       const logoEl = logoRef.current;
-      if (!logoEl) return;
-      const innerBounds   = heroInner.getBoundingClientRect();
-      const sectionBounds = heroSection.getBoundingClientRect();
-      const logoBounds    = logoEl.getBoundingClientRect();
+      const ctaEl = ctaRef.current;
+      const innerBounds = heroInner.getBoundingClientRect();
 
-      // Clip white overlay from bottom as gradient edge crosses the logo
-      const overlap = logoBounds.bottom - innerBounds.bottom;
-      const pct = Math.min(100, Math.max(0, (overlap / logoBounds.height) * 100));
-      setClipPct(pct);
-      // Wordmark stays white while any part of the hero section is visible
-      setOverHero(sectionBounds.bottom > 0);
+      if (logoEl) {
+        const logoBounds = logoEl.getBoundingClientRect();
+        const overlap = logoBounds.bottom - innerBounds.bottom;
+        const pct = Math.min(100, Math.max(0, (overlap / logoBounds.height) * 100));
+        setLogoClipPct(pct);
+      }
+
+      if (ctaEl) {
+        const ctaBounds = ctaEl.getBoundingClientRect();
+        const overlap = ctaBounds.bottom - innerBounds.bottom;
+        const pct = Math.min(100, Math.max(0, (overlap / ctaBounds.height) * 100));
+        setCtaClipPct(pct);
+      }
     };
 
     update();
@@ -49,59 +173,46 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      <div
-        className="flex items-center justify-between mx-auto"
-        style={{ padding: "30px 40px" }}
-      >
-      {/* ── Logo lockup ── */}
-      <div className="flex items-center" style={{ gap: "14px" }}>
-
-        {/* Mark: gradient always underneath, white overlay clips to hero edge */}
-        <div ref={logoRef} className="relative flex-shrink-0" style={{ width: 65, height: 42 }}>
-          <div className="absolute inset-0" style={{ ...MASK }}>
-            <GradientCanvas className="absolute inset-0 w-full h-full" seed={GRADIENT_SEED} startTime={GRADIENT_START_TIME} />
+    <header className="fixed left-0 right-0 top-0 z-50">
+      <div className="mx-auto flex items-center justify-between" style={{ padding: layoutW < 900 ? "20px 15px" : "30px 40px" }}>
+        <a href="/" className="flex items-center" style={{ gap: layoutW < 900 ? "10px" : "14px", textDecoration: "none" }}>
+          <div ref={logoRef} className="relative flex-shrink-0" style={{ width: 65, height: 42 }}>
+            <div className="absolute inset-0" style={MASK}>
+              <GradientCanvas className="absolute inset-0 h-full w-full" seed={GRADIENT_SEED} startTime={GRADIENT_START_TIME} />
+            </div>
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "white",
+                ...MASK,
+                clipPath: `inset(0 0 ${logoClipPct}% 0)`,
+              }}
+            />
           </div>
+
           <div
-            className="absolute inset-0"
+            className="font-body overflow-hidden"
             style={{
-              background: "white",
-              ...MASK,
-              clipPath: `inset(0 0 ${clipPct}% 0)`,
+              height: 42,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              fontSize: 13,
+              fontWeight: 500,
+              lineHeight: 1,
+              color: "rgba(255,255,255,0.92)",
+              clipPath: `inset(0 0 ${logoClipPct}% 0)`,
             }}
-          />
-        </div>
+          >
+            {LINES.map((line) => (
+              <div key={line}>{line}</div>
+            ))}
+          </div>
+        </a>
 
-        {/* Wordmark: clipped from the bottom to match the white logo overlay */}
-        <div
-          className="font-body overflow-hidden"
-          style={{
-            fontSize: 13,
-            fontWeight: 500,
-            lineHeight: 1.1,
-            color: "rgba(255,255,255,0.92)",
-            clipPath: `inset(0 0 ${clipPct}% 0)`,
-          }}
-        >
-          {LINES.map((line) => (
-            <div key={line}>{line}</div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── CTA ── */}
-      <a href="#contact" style={{ textDecoration: "none" }}>
-        <span
-          className={`font-body ${!overHero ? "gradient-text" : ""}`}
-          style={{
-            fontSize: 16,
-            fontWeight: 700,
-            color: overHero ? "white" : undefined,
-          }}
-        >
-          Get In Touch
-        </span>
-      </a>
+        <a href={isContactPage ? "#contact-page-main" : "/get-in-touch"} style={{ textDecoration: "none", flexShrink: 0 }}>
+          <HeaderCtaText clipPct={ctaClipPct} measureRef={ctaRef} mobile={layoutW < 900} />
+        </a>
       </div>
     </header>
   );

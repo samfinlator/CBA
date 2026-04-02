@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const logos = [
   { src: "/logos/logo-msq.webp", alt: "MSQ" },
@@ -32,31 +32,50 @@ const logos = [
 
 const SPEED = 40; // px per second
 
+function getViewportWidth() {
+  return window.outerWidth || document.documentElement.clientWidth || window.innerWidth;
+}
+
 export default function LogoTicker() {
   const trackRef = useRef<HTMLDivElement>(null);
-  const posRef   = useRef(0);
-  const rafRef   = useRef<number | undefined>(undefined);
+  const groupRef = useRef<HTMLDivElement>(null);
+  const posRef = useRef(0);
+  const rafRef = useRef<number | undefined>(undefined);
   const lastTRef = useRef<number | undefined>(undefined);
+  const lastWidthRef = useRef(getViewportWidth());
+  const [isMobile, setIsMobile] = useState(() => getViewportWidth() < 900);
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    const group = groupRef.current;
+    if (!track || !group) return;
 
-    // Wait for all images to load so scrollWidth is accurate
     const images = Array.from(track.querySelectorAll("img"));
-    let loaded = 0;
+    let cancelled = false;
+
+    const stop = () => {
+      if (rafRef.current !== undefined) cancelAnimationFrame(rafRef.current);
+      rafRef.current = undefined;
+      lastTRef.current = undefined;
+    };
 
     const start = () => {
-      // singleLen = width of one copy of the logos strip
-      const singleLen = track.scrollWidth / 2;
+      if (cancelled) return;
+      stop();
+
+      const singleLen = group.getBoundingClientRect().width;
+      if (!singleLen) return;
+
+      posRef.current = 0;
+      track.style.transform = "translate3d(0px, 0, 0)";
 
       const tick = (now: number) => {
+        if (cancelled) return;
         const dt = lastTRef.current !== undefined ? now - lastTRef.current : 0;
         lastTRef.current = now;
 
         posRef.current -= (SPEED * dt) / 1000;
 
-        // Loop back seamlessly when one full copy has scrolled past
         if (posRef.current <= -singleLen) {
           posRef.current += singleLen;
         }
@@ -68,44 +87,70 @@ export default function LogoTicker() {
       rafRef.current = requestAnimationFrame(tick);
     };
 
-    const onLoad = () => {
-      loaded++;
-      if (loaded >= images.length) start();
+    const waitForImages = async () => {
+      await Promise.all(
+        images.map(
+          (img) =>
+            new Promise<void>((resolve) => {
+              if (img.complete) {
+                resolve();
+                return;
+              }
+              img.addEventListener("load", () => resolve(), { once: true });
+              img.addEventListener("error", () => resolve(), { once: true });
+            })
+        )
+      );
+      start();
     };
 
-    if (images.every(img => img.complete)) {
+    const handleResize = () => {
+      const nextWidth = getViewportWidth();
+      const widthChanged = Math.abs(nextWidth - lastWidthRef.current) > 1;
+      setIsMobile(nextWidth < 900);
+
+      if (!widthChanged) return;
+
+      lastWidthRef.current = nextWidth;
       start();
-    } else {
-      images.forEach(img => {
-        if (img.complete) { loaded++; }
-        else { img.addEventListener("load", onLoad, { once: true }); }
-      });
-      if (loaded >= images.length) start();
-    }
+    };
+
+    waitForImages();
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      cancelled = true;
+      stop();
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
     <div
-      className="overflow-hidden flex items-center bg-page"
-      style={{ height: "57px" }}
+      className="flex items-center overflow-hidden bg-page h-[46px] md:h-[57px]"
       aria-label="Our clients"
     >
       <div
         ref={trackRef}
         className="flex items-center whitespace-nowrap w-max"
-        style={{ gap: "80px", willChange: "transform", backfaceVisibility: "hidden" }}
+        style={{ willChange: "transform", backfaceVisibility: "hidden" }}
       >
-        {[...logos, ...logos].map((logo, i) => (
-          <img
-            key={i}
-            src={logo.src}
-            alt={logo.alt}
-            className="h-6 max-w-[120px] object-contain opacity-60 grayscale flex-shrink-0"
-          />
+        {[0, 1].map((copy) => (
+          <div
+            key={copy}
+            ref={copy === 0 ? groupRef : undefined}
+            className="flex items-center flex-shrink-0"
+            style={{ gap: isMobile ? "48px" : "80px", paddingRight: isMobile ? "48px" : "80px" }}
+          >
+            {logos.map((logo) => (
+              <img
+                key={`${copy}-${logo.alt}`}
+                src={logo.src}
+                alt={logo.alt}
+                className="h-5 md:h-6 max-w-[92px] md:max-w-[120px] object-contain opacity-60 grayscale flex-shrink-0"
+              />
+            ))}
+          </div>
         ))}
       </div>
     </div>

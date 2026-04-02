@@ -14,6 +14,13 @@ const DEFAULT_BIO =
 
 const T = 500; // transition duration ms
 const CARD_W = 220;
+const DESKTOP_BREAKPOINT = 1024;
+const DESKTOP_HEIGHT_BREAKPOINT = 1180;
+const DESKTOP_STACK_HEIGHT = 340;
+
+function getViewportWidth() {
+  return window.outerWidth || document.documentElement.clientWidth || window.innerWidth;
+}
 
 const team: TeamMember[] = [
   {
@@ -61,25 +68,22 @@ function EmailIcon() {
   );
 }
 
-function ChevronIcon({ open }: { open: boolean }) {
+function ToggleIcon({ open }: { open: boolean }) {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+    <img
+      src="/assets/connector-cross.svg"
+      alt=""
+      aria-hidden="true"
       style={{
-        transform: open ? "rotate(90deg)" : "rotate(0deg)",
+        width: 20,
+        height: 22,
+        display: "block",
+        transform: open ? "rotate(45deg)" : "rotate(0deg)",
         transition: `transform ${T}ms ease`,
         flexShrink: 0,
+        transformOrigin: "center center",
       }}
-    >
-      <path d="M5 2l4 5-4 5" />
-    </svg>
+    />
   );
 }
 
@@ -344,7 +348,7 @@ function MobilePersonRow({
           </div>
         </div>
         <div style={{ color: "#575757", paddingRight: 4 }}>
-          <ChevronIcon open={isOpen} />
+          <ToggleIcon open={isOpen} />
         </div>
       </div>
 
@@ -388,7 +392,7 @@ export default function OurPeople() {
   const containerRef = useRef<HTMLDivElement>(null);
   const desktopRowRef = useRef<HTMLDivElement>(null);
   const [containerW, setContainerW] = useState(1200);
-  const [windowW, setWindowW] = useState(() => window.innerWidth);
+  const [windowW, setWindowW] = useState(() => getViewportWidth());
   const [desktopTooTall, setDesktopTooTall] = useState(false);
 
   useEffect(() => {
@@ -401,16 +405,18 @@ export default function OurPeople() {
   }, []);
 
   useEffect(() => {
-    const onResize = () => setWindowW(window.innerWidth);
+    const onResize = () => setWindowW(getViewportWidth());
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
   }, []);
 
   useEffect(() => {
     setDesktopTooTall(false);
   }, [windowW]);
 
-  const isMobile   = windowW < 900 || desktopTooTall;
+  const isMobile   = windowW < DESKTOP_BREAKPOINT || (windowW < DESKTOP_HEIGHT_BREAKPOINT && desktopTooTall);
   const isHovering = hovered !== null;
   // 190px cards below full desktop, 220px at full desktop (≥1350px)
   const cardW      = windowW >= 1350 ? CARD_W : 190;
@@ -421,9 +427,9 @@ export default function OurPeople() {
 
   useEffect(() => {
     const el = desktopRowRef.current;
-    if (!el || windowW < 900) return;
+    if (!el || windowW < DESKTOP_BREAKPOINT || windowW >= DESKTOP_HEIGHT_BREAKPOINT) return;
 
-    const updateHeight = () => setDesktopTooTall(el.getBoundingClientRect().height >= 317);
+    const updateHeight = () => setDesktopTooTall(el.getBoundingClientRect().height >= DESKTOP_STACK_HEIGHT);
     const ro = new ResizeObserver(() => updateHeight());
 
     updateHeight();
@@ -457,19 +463,27 @@ export default function OurPeople() {
           /* ── Mobile: vertical stack ──────────────────────────── */
           <div style={{ position: "relative", backgroundColor: "var(--color-page)" }}>
             <div style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
-            {team.map((member) => (
-              <div key={member.id}>
-                <MobilePersonRow
-                  member={member}
-                  isOpen={tapped === member.id}
-                  onToggle={() => setTapped(tapped === member.id ? null : member.id)}
-                />
-                <div style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
-              </div>
-            ))}
-            <p className="type-body" style={{ margin: 0, paddingTop: 20, paddingBottom: 10 }}>
-              {DEFAULT_BIO}
-            </p>
+            <div style={{ paddingTop: 20, paddingBottom: 20 }}>
+              <p className="type-body" style={{ margin: 0 }}>
+                {DEFAULT_BIO}
+              </p>
+            </div>
+            <div style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
+            <div>
+              {team.map((member, index) => (
+                <div key={member.id}>
+                  <MobilePersonRow
+                    member={member}
+                    isOpen={tapped === member.id}
+                    onToggle={() => setTapped(tapped === member.id ? null : member.id)}
+                  />
+                  {index < team.length - 1 && (
+                    <div style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
           </div>
         ) : (
           /* ── Desktop: horizontal hover layout ────────────────── */
@@ -532,7 +546,7 @@ export default function OurPeople() {
               style={{
                 display: "flex",
                 alignItems: "stretch",
-                overflow: "hidden",
+                overflow: "visible",
                 flexShrink: 0,
                 width: isHovering ? 0 : 1.5 + bioW,
                 transition: `width ${T}ms ease-in-out`,

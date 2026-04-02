@@ -11,35 +11,42 @@ interface Value {
 const values: Value[] = [
   {
     label: "Empathy",
-    color: "var(--color-accent-gold)",
+    color: "#FFBA00",
     description:
-      "We work with people, not just CVs. Candidates are treated with the same care as clients.",
+      "We support every candidate with sensitivity and counsel, particularly those missing out on roles they set their hearts on.",
   },
   {
     label: "Tenacity",
-    color: "var(--color-accent-blue)",
+    color: "#0073FF",
     description:
       "We keep the process moving. Re-engaging candidates, managing dropouts and solving problems until the role is filled.",
   },
   {
     label: "Flexibility",
-    color: "var(--color-accent-teal)",
+    color: "#53B2A8",
     description:
       "No two briefs are the same. We adapt to your process, your timeline and your priorities. Without compromising quality.",
   },
   {
     label: "Integrity",
-    color: "var(--color-accent-salmon)",
+    color: "#E53333",
     description:
       "Honest with clients, honest with candidates. We give it to you straight even when it's not what you want to hear.",
   },
   {
     label: "Intuition",
-    color: "var(--color-accent-magenta)",
+    color: "#D900D9",
     description:
       "Pattern recognition built over decades. Knowing which candidate will thrive before anyone else does.",
   },
 ];
+
+const TABLET_BREAKPOINT = 1196;
+const COMPACT_BREAKPOINT = 880;
+
+function getLayoutWidth() {
+  return window.outerWidth || document.documentElement.clientWidth || window.innerWidth;
+}
 
 function Frame({
   active,
@@ -78,6 +85,7 @@ function ValueCard({
   collapsedFrameHeight,
   copyW,
   onActivate,
+  hoverEnabled,
 }: {
   value: Value;
   active: boolean;
@@ -87,6 +95,7 @@ function ValueCard({
   collapsedFrameHeight: number;
   copyW: number;
   onActivate: () => void;
+  hoverEnabled: boolean;
 }) {
   const railLeft = active ? 14 : 3;
   const frameHeight = active ? "100%" : collapsedFrameHeight;
@@ -94,19 +103,24 @@ function ValueCard({
 
   return (
     <button
+      data-value-card={value.label}
       type="button"
-      onMouseEnter={onActivate}
-      onFocus={onActivate}
+      onMouseEnter={hoverEnabled ? onActivate : undefined}
+      onFocus={hoverEnabled ? onActivate : undefined}
       onClick={onActivate}
       className="relative overflow-hidden text-left"
       style={{
         width,
         height,
+        flexShrink: 0,
+        scrollSnapAlign: "start",
+        scrollSnapStop: "always",
         backgroundColor: "#F7F7F7",
         padding: 0,
         transition: "width 450ms ease",
         display: "flex",
         alignItems: "center",
+        cursor: hoverEnabled ? "pointer" : "default",
       }}
     >
       <div
@@ -147,7 +161,7 @@ function ValueCard({
 
         <div
           className="relative flex h-full flex-col"
-          style={{ paddingLeft: active ? 22 : 2 }}
+          style={{ paddingLeft: active ? 12 : 2, paddingRight: active ? 12 : 0 }}
         >
           <p
             className="type-card-name"
@@ -192,7 +206,13 @@ function ValueCard({
 
 export default function WhatMakesUs() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const compactRailRef = useRef<HTMLDivElement>(null);
+  const activeLabelRef = useRef<Value["label"]>("Empathy");
+  const compactScrollLockRef = useRef(false);
   const [containerW, setContainerW] = useState(1432);
+  const [layoutW, setLayoutW] = useState(() => getLayoutWidth());
+  const [isDesktop, setIsDesktop] = useState(() => getLayoutWidth() >= TABLET_BREAKPOINT);
+  const [isCompact, setIsCompact] = useState(() => getLayoutWidth() < COMPACT_BREAKPOINT);
   const [activeLabel, setActiveLabel] = useState<Value["label"]>("Empathy");
 
   useEffect(() => {
@@ -205,15 +225,109 @@ export default function WhatMakesUs() {
     return () => ro.disconnect();
   }, []);
 
-  const isStacked = containerW < 800;
-  const narrativeW = isStacked ? containerW : Math.max(320, Math.min(560, containerW * 0.36));
-  const cardsW = isStacked ? containerW : containerW - narrativeW - 40;
+  useEffect(() => {
+    const updateViewport = () => {
+      const nextLayoutW = getLayoutWidth();
+      setLayoutW(nextLayoutW);
+      setIsDesktop(nextLayoutW >= TABLET_BREAKPOINT);
+      setIsCompact(nextLayoutW < COMPACT_BREAKPOINT);
+    };
+
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+    return () => {
+      window.removeEventListener("resize", updateViewport);
+    };
+  }, []);
+
+  useEffect(() => {
+    activeLabelRef.current = activeLabel;
+  }, [activeLabel]);
+
+  useEffect(() => {
+    if (containerW >= COMPACT_BREAKPOINT) return;
+    const rail = compactRailRef.current;
+    if (!rail) return;
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    const updateActive = () => {
+      const cards = Array.from(rail.querySelectorAll<HTMLElement>("[data-value-card]"));
+      if (!cards.length) return;
+
+      const scrollX = rail.scrollLeft;
+      const maxScrollX = rail.scrollWidth - rail.clientWidth;
+      const currentIndex = values.findIndex((value) => value.label === activeLabelRef.current);
+
+      let targetIndex = currentIndex;
+
+      if (scrollX <= 8) {
+        targetIndex = 0;
+      } else if (scrollX >= maxScrollX - 8) {
+        targetIndex = cards.length - 1;
+      } else {
+        let closestIndex = currentIndex;
+        let closestDistance = Number.POSITIVE_INFINITY;
+        cards.forEach((card, index) => {
+          const distance = Math.abs(card.offsetLeft - scrollX);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+        targetIndex = Math.max(currentIndex - 1, Math.min(currentIndex + 1, closestIndex));
+      }
+
+      const targetLabel = cards[targetIndex]?.dataset.valueCard as Value["label"] | undefined;
+      if (!targetLabel) return;
+
+      if (targetLabel !== activeLabelRef.current) {
+        setActiveLabel(targetLabel);
+      }
+
+      const targetCard = cards[targetIndex];
+      if (targetCard && Math.abs(targetCard.offsetLeft - scrollX) > 2 && !compactScrollLockRef.current) {
+        compactScrollLockRef.current = true;
+        rail.scrollTo({ left: targetCard.offsetLeft, behavior: "smooth" });
+        window.setTimeout(() => {
+          compactScrollLockRef.current = false;
+        }, 260);
+      }
+    };
+
+    const onScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(updateActive, 80);
+    };
+
+    rail.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateActive);
+    updateActive();
+
+    return () => {
+      clearTimeout(timeoutId);
+      rail.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updateActive);
+    };
+  }, [containerW]);
+
+  const isTablet = !isDesktop && !isCompact;
+  const desktopNarrativeW = Math.max(211, Math.min(560, containerW * 0.36));
+  const desktopCardsMinW = 945;
+  const cardsW = isDesktop ? Math.max(desktopCardsMinW, containerW - desktopNarrativeW - 40) : containerW;
+  const narrativeW = isDesktop ? Math.max(211, containerW - cardsW - 40) : containerW;
   const gap = 20;
-  const cardH = isStacked ? 220 : 420;
-  const activeW = isStacked ? cardsW : Math.max(320, Math.min(560, cardsW * 0.42));
-  const inactiveFrameW = isStacked ? cardsW : Math.max(122, Math.min(154, Math.floor(cardsW * 0.142)));
-  const collapsedFrameHeight = isStacked ? 220 : 352;
-  const copyW = Math.max(220, activeW - 74);
+  const cardH = isCompact ? 352 : isTablet ? 380 : 420;
+  const tabletInactiveW = Math.max(104, Math.min(122, Math.floor(cardsW * 0.12)));
+  const desktopInactiveW = Math.max(122, Math.min(154, Math.floor(cardsW * 0.142)));
+  const desktopActiveW = Math.max(320, cardsW - 4 * desktopInactiveW - 4 * gap);
+  const tabletActiveW = Math.max(320, cardsW - 4 * tabletInactiveW - 4 * gap);
+  const compactActiveW = Math.min(layoutW * 0.8, 383);
+  const activeW = isCompact ? compactActiveW : isTablet ? tabletActiveW : desktopActiveW;
+  const activeWNumber = isCompact ? compactActiveW : isTablet ? tabletActiveW : desktopActiveW;
+  const inactiveFrameW = isCompact ? 154 : isTablet ? tabletInactiveW : desktopInactiveW;
+  const collapsedFrameHeight = isCompact ? 352 : 352;
+  const copyW = isCompact ? Math.max(220, activeWNumber - 74) : Math.max(240, activeWNumber - 56);
 
   return (
     <section className="px-5 py-[80px] md:px-10">
@@ -227,13 +341,13 @@ export default function WhatMakesUs() {
           <div
             className="flex"
             style={{
-              flexDirection: isStacked ? "column" : "row",
-              gap: isStacked ? 28 : 40,
+              flexDirection: isDesktop ? "row" : "column",
+              gap: isCompact ? 28 : 40,
               paddingTop: 24,
               paddingBottom: 24,
             }}
           >
-            <div style={{ width: isStacked ? "100%" : narrativeW, flexShrink: 0 }}>
+            <div style={{ width: isDesktop ? narrativeW : "100%", flexShrink: 0 }}>
               <div className="flex flex-col gap-8">
                 <p className="type-body-lg" style={{ margin: 0 }}>
                   Our personal, face-to-face approach sets us apart from other firms.
@@ -247,11 +361,30 @@ export default function WhatMakesUs() {
             <div
               style={{
                 minWidth: 0,
-                flex: 1,
+                flex: isCompact ? "0 0 auto" : 1,
                 display: "flex",
-                flexDirection: isStacked ? "column" : "row",
+                flexDirection: "row",
+                flexWrap: "nowrap",
                 gap,
+                overflowX: isCompact ? "auto" : "visible",
+                overflowY: "hidden",
+                scrollbarWidth: isCompact ? "none" : undefined,
+                msOverflowStyle: isCompact ? "none" : undefined,
+                paddingBottom: isCompact ? 4 : 0,
+                paddingRight: isCompact ? "calc(12svw + 20px)" : 0,
+                width: isCompact ? "calc(100% + 40px)" : undefined,
+                marginRight: isCompact ? -40 : 0,
+                position: isCompact ? "sticky" : "static",
+                top: isCompact ? 20 : undefined,
+                alignSelf: isCompact ? "flex-start" : undefined,
+                scrollSnapType: isCompact ? "x mandatory" : undefined,
+                scrollPaddingLeft: isCompact ? 0 : undefined,
+                scrollPaddingRight: isCompact ? "12svw" : undefined,
+                WebkitOverflowScrolling: "touch",
+                overscrollBehaviorX: isCompact ? "contain" : undefined,
               }}
+              ref={isCompact ? compactRailRef : undefined}
+              className={isCompact ? "hide-scrollbar" : undefined}
             >
               {values.map((value) => {
                 const active = value.label === activeLabel;
@@ -265,7 +398,15 @@ export default function WhatMakesUs() {
                     height={cardH}
                     collapsedFrameHeight={collapsedFrameHeight}
                     copyW={copyW}
-                    onActivate={() => setActiveLabel(value.label)}
+                    hoverEnabled={!isCompact}
+                    onActivate={() => {
+                      setActiveLabel(value.label);
+                      if (isCompact) {
+                        const rail = compactRailRef.current;
+                        const card = rail?.querySelector<HTMLElement>(`[data-value-card="${value.label}"]`);
+                        if (rail && card) rail.scrollTo({ left: card.offsetLeft, behavior: "smooth" });
+                      }
+                    }}
                   />
                 );
               })}

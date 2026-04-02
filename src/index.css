@@ -94,17 +94,27 @@ html {
   scroll-behavior: smooth;
   background-color: #f7f7f7; /* same as --color-page; paints the overscroll bounce area in Chrome */
   overscroll-behavior: none;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
   background-color: transparent;
   overscroll-behavior: none;
+  overflow-x: clip;
   font-family: var(--font-body);
   font-weight: 400;
   color: var(--color-dark);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+#root {
+  overflow-x: clip;
 }
 
 /* ── Logo Ticker ── */
@@ -217,4 +227,15 @@ body {
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
+}
+
+
+@media (max-width: 900px) {
+  html {
+    zoom: 1;
+  }
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

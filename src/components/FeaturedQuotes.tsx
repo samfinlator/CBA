@@ -5,13 +5,21 @@ interface Quote {
   text: React.ReactNode;
 }
 
+
+const GradientPhrase = ({ children }: { children: React.ReactNode }) => (
+  <span className="gradient-text">
+    {children}
+  </span>
+);
+
 const quotes: Quote[] = [
   {
     attribution: "Radhika Radhakrishnan — CFO, S4 Capital",
     text: (
       <>
-        &ldquo;CAMPBELL BROWN HAS BEEN NOTHING SHORT OF EXCELLENT — RESPONSIVE,
-        TIMELY AND FUN.&rdquo;
+        &ldquo;CAMPBELL BROWN HAS BEEN{" "}
+        <GradientPhrase>NOTHING SHORT OF EXCELLENT</GradientPhrase>{" "}
+        — RESPONSIVE, TIMELY AND FUN.&rdquo;
       </>
     ),
   },
@@ -20,8 +28,7 @@ const quotes: Quote[] = [
     text: (
       <>
         &ldquo;THE{" "}
-        <span className="gradient-text">BEST</span>-
-        <span className="gradient-text">CONNECTED</span>{" "}
+        <GradientPhrase>BEST-CONNECTED</GradientPhrase>{" "}
         HEADHUNTER IN THE ADVERTISING / COMMUNICATIONS SECTOR&rdquo;
       </>
     ),
@@ -31,7 +38,7 @@ const quotes: Quote[] = [
     text: (
       <>
         &ldquo;THEIR INTUITION OF KNOWING A CANDIDATE IS RIGHT FOR THE ROLE IS
-        TRULY EXCEPTIONAL&rdquo;
+        <GradientPhrase> TRULY EXCEPTIONAL</GradientPhrase>&rdquo;
       </>
     ),
   },

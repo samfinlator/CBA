@@ -51,7 +51,7 @@ function CtaButton() {
 
   return (
     <a
-      href="#contact"
+      href="/get-in-touch"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
@@ -63,7 +63,7 @@ function CtaButton() {
         textDecoration: "none",
       }}
     >
-      <ButtonFrame width={hovered ? 208 : 230} height={hovered ? 48 : 74} active={hovered} />
+      <ButtonFrame width={hovered ? 208 : 228} height={hovered ? 48 : 68} active={hovered} />
 
       <span
         className="relative z-10 inline-flex items-center justify-center overflow-hidden font-body text-white"
@@ -87,8 +87,8 @@ function CtaButton() {
 
 export default function GetInTouch() {
   return (
-    <section id="contact" className="px-10 py-[80px]">
-      <div className="mx-auto max-w-[1512px]">
+    <section id="contact" className="px-5 py-[80px] md:px-10">
+      <div className="mx-auto max-w-[1512px] overflow-x-clip">
         <div
           id="contact-cta-box"
           className="relative"
@@ -110,8 +110,8 @@ export default function GetInTouch() {
               style={{
                 margin: 0,
                 fontSize: "clamp(3rem, 7vw, 96px)",
-                lineHeight: 1.05,
-                letterSpacing: "-2.4px",
+                lineHeight: 1.1,
+                letterSpacing: "-0.02em",
               }}
             >
               IT&rsquo;S NEVER JUST BUSINESS,

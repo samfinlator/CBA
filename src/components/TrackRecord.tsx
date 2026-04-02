@@ -281,7 +281,7 @@ function TickerRow({
       ref={outerRef}
       style={{
         position: "relative",
-        zIndex: reverse ? undefined : 1,
+        zIndex: showBottomLine ? 1 : 2,
         overflowX: "clip",
         overflowY: "visible",
         cursor: "grab",
@@ -311,14 +311,16 @@ function TickerRow({
 
 export default function TrackRecord() {
   return (
-    <section className="py-[80px]">
-      <div className="mx-auto max-w-[1432px] px-10 mb-5">
+    <section className="px-5 py-[80px] md:px-10">
+      <div className="mx-auto mb-5 max-w-[1432px]">
         <h2 className="type-section-heading">What People Are Saying</h2>
       </div>
 
-      <div className="testimonial-ticker flex flex-col" style={{ gap: 0, backgroundColor: "var(--color-page)" }}>
+      <div style={{ marginLeft: "-20px", marginRight: "-20px" }}>
+        <div className="testimonial-ticker flex flex-col" style={{ gap: 0, backgroundColor: "var(--color-page)", overflowX: "clip" }}>
         <TickerRow testimonials={row1} reverse={false} showBottomLine={false} />
         <TickerRow testimonials={row2} reverse={true}  showBottomLine={true}  />
+        </div>
       </div>
     </section>
   );
