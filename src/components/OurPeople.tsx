@@ -6,6 +6,7 @@ interface TeamMember {
   role: string;
   photo: string;
   linkedin: string;
+  email: string;
   bio: string;
 }
 
@@ -29,6 +30,7 @@ const team: TeamMember[] = [
     role: "Founder / Director",
     photo: "/assets/team-nick.jpg",
     linkedin: "https://www.linkedin.com/in/nick-brown-6627244/",
+    email: "nick@campbellbrown.co.uk",
     bio: "Nick founded Campbell Brown Associates in 2010, following 13 years running the media practice at a leading London search firm. He was part of the management team that successfully exited in 2005. Before that, he qualified as a chartered accountant at PWC. Up until 2023, Nick operated alone, placing hundreds of senior finance professionals, principally into media and technology. Over time, he has built an enviable reputation across the space and it's a real challenge to find someone in the field who isn't connected to him.",
   },
   {
@@ -37,6 +39,7 @@ const team: TeamMember[] = [
     role: "Account Director",
     photo: "/assets/team-sophie.jpg",
     linkedin: "https://www.linkedin.com/in/sophieallenrecruitment/",
+    email: "sophie@campbellbrown.co.uk",
     bio: "Sophie has been hiring senior finance roles within the media and marketing sector for 25 years – predominantly in the UK, but also including a 2 year stint in Australia. Her accumulated knowledge, in the media space, is second to none. Her clients will confirm her ability to fill any job, at pace. But it's not all about filling roles – her empathic approach fits the CBA ethos perfectly, treating all her candidates with the same care and attention as the clients they will one day become.",
   },
   {
@@ -45,6 +48,7 @@ const team: TeamMember[] = [
     role: "Account Director",
     photo: "/assets/team-kirsten.jpg",
     linkedin: "https://www.linkedin.com/in/kirstenwilson1/?originalSubdomain=uk",
+    email: "kirsten@campbellbrown.co.uk",
     bio: "Kirsten spent 12 years heading up a successful 'Interim and Contract' team, specialising in media finance before moving to the South Coast where she gained experience placing accountants across a more diverse client base. She is a huge asset to CBA, working quickly and relentlessly across a range of roles, instinctively leveraging her network, both in and out of the media and tech spaces.",
   },
 ];
@@ -230,7 +234,7 @@ function PersonCard({
               <LinkedInIcon />
             </a>
             <a
-              href="#"
+              href={`mailto:${member.email}`}
               style={{ color: "#4A9AAF" }}
               className="hover:opacity-70"
               aria-label={`Email ${member.name}`}
@@ -338,7 +342,7 @@ function MobilePersonRow({
               <LinkedInIcon />
             </a>
             <a
-              href="#"
+              href={`mailto:${member.email}`}
               style={{ color: "#4A9AAF" }}
               onClick={e => e.stopPropagation()}
               aria-label={`Email ${member.name}`}
