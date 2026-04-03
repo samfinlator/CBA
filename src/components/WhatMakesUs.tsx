@@ -314,7 +314,7 @@ export default function WhatMakesUs() {
   const isTablet = !isDesktop && !isCompact;
   const desktopRowGap = 20;
   const desktopCardsMinW = 945;
-  const desktopCardsMaxW = 1008;
+  const desktopCardsMaxW = 960;
   const cardsW = isDesktop
     ? Math.min(desktopCardsMaxW, Math.max(desktopCardsMinW, containerW - 211 - desktopRowGap))
     : containerW;
@@ -351,7 +351,7 @@ export default function WhatMakesUs() {
               paddingBottom: 24,
             }}
           >
-            <div style={{ width: isDesktop ? narrativeW : "100%", flexShrink: 0 }}>
+            <div style={{ width: isDesktop ? narrativeW : "100%", flex: isDesktop ? "1 1 auto" : undefined, minWidth: 0, flexShrink: 0 }}>
               <div className="flex flex-col gap-8">
                 <p className="type-body-lg" style={{ margin: 0 }}>
                   Our personal, face-to-face approach sets us apart from other firms.
@@ -365,7 +365,7 @@ export default function WhatMakesUs() {
             <div
               style={{
                 minWidth: 0,
-                flex: isCompact ? "0 0 auto" : 1,
+                flex: isCompact ? "0 0 auto" : isDesktop ? `0 0 ${cardsW}px` : 1,
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "nowrap",
@@ -385,7 +385,7 @@ export default function WhatMakesUs() {
                 scrollPaddingRight: isCompact ? "12svw" : undefined,
                 WebkitOverflowScrolling: "touch",
                 overscrollBehaviorX: isCompact ? "contain" : undefined,
-                width: isCompact ? "calc(100% + 40px)" : "100%",
+                width: isCompact ? "calc(100% + 40px)" : isDesktop ? cardsW : "100%",
               }}
               ref={isCompact ? compactRailRef : undefined}
               className={isCompact ? "hide-scrollbar" : undefined}
