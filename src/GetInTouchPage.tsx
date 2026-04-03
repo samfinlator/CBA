@@ -82,7 +82,7 @@ function ContactCard({
           <div className="min-w-0 flex flex-1 flex-col justify-between" style={{ minHeight: 116 }}>
             <div>
               <p className="type-card-role" style={{ margin: 0 }}>{role}</p>
-              <h3 className="type-card-name" style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>{name}</h3>
+              <h3 className="type-card-name" style={{ margin: 0 }}>{name}</h3>
             </div>
 
             <div className="flex flex-wrap items-center gap-x-6" style={{ rowGap: 4 }}>
