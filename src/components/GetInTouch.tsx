@@ -1,6 +1,5 @@
 import { useState } from "react";
-import GradientCanvas from "./GradientCanvas";
-import { GRADIENT_SEED, GRADIENT_START_TIME } from "../gradientConfig";
+import GradientMirror from "./GradientMirror";
 
 function ConnectorFrame() {
   return (
@@ -77,7 +76,7 @@ function CtaButton() {
         }}
       >
         <span className="absolute inset-0" style={{ borderRadius: 2, overflow: "hidden" }}>
-          <GradientCanvas className="absolute inset-0 h-full w-full" seed={GRADIENT_SEED} startTime={GRADIENT_START_TIME} />
+          <GradientMirror className="absolute inset-0 h-full w-full" />
         </span>
         <span className="relative z-10">Get In Touch</span>
       </span>

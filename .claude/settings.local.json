@@ -34,7 +34,20 @@
       "Bash(sed -i '' 's/fontWeight: 450/fontWeight: 400/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/StyleGuide.tsx\")",
       "Bash(sed -i '' 's/weight: 450/weight: 400/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/StyleGuide.tsx\")",
       "Bash(sed -i '' 's/· 450 ·/· 400 ·/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/StyleGuide.tsx\")",
-      "Bash(sed -i '' 's/font-weight: 450/font-weight: 400/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/StyleGuide.tsx\")"
+      "Bash(sed -i '' 's/font-weight: 450/font-weight: 400/g' \"/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/StyleGuide.tsx\")",
+      "Bash(npm --version)",
+      "Read(//usr/local/lib/node_modules/npm/bin/**)",
+      "Read(//Users/samfinlator/.nvm/versions/node/**)",
+      "Bash(echo \"PATH: $PATH\")",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Bash(sips -z 88 88 \"$f\" --out \"$f\")",
+      "Bash(done)",
+      "Bash(python3 -c \"import fontTools\")",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -c \"from fontTools.ttLib import TTFont; f = TTFont\\(''/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/assets/fonts/NGTVinaSans-Neue.ttf''\\); f.flavor = ''woff2''; f.save\\(''/Users/samfinlator/Desktop/Work/Campell Brown/Main/public/assets/fonts/NGTVinaSans-Neue.woff2''\\); print\\(''done''\\)\")",
+      "Bash(python3 -m pip install fonttools brotli)",
+      "Bash(python3 -m pip install --user fonttools brotli)"
     ]
   }
 }

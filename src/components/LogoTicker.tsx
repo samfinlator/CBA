@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { PREFERS_REDUCED_MOTION } from "../utils/deviceCapability";
 
 const logos = [
   { src: "/logos/logo-msq.webp", alt: "MSQ" },
@@ -101,7 +102,7 @@ export default function LogoTicker() {
             })
         )
       );
-      start();
+      if (!PREFERS_REDUCED_MOTION) start();
     };
 
     const handleResize = () => {

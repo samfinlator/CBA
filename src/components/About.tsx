@@ -28,6 +28,7 @@ export default function About() {
                 <img
                   src="/assets/team-photo.jpg"
                   alt="Campbell Brown team"
+                  loading="lazy"
                   className="w-full"
                 />
               </div>

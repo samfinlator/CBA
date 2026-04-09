@@ -12,6 +12,7 @@ uniform float uUvDistortionIterations;
 uniform float uUvDistortionIntensity;
 uniform vec2 uViewportUvOffset;
 uniform vec2 uViewportUvScale;
+uniform float uGrain; // 1.0 = grain enabled, 0.0 = disabled (mobile)
 
 varying vec2 vUv;
 
@@ -110,7 +111,7 @@ void main() {
   uv *= uUvScale;
 
   // Distort the uv coordinates with noise iterations
-  for (int i = 0; i < 14; i++) {
+  for (int i = 0; i < 6; i++) {
     if (float(i) >= uUvDistortionIterations) break;
     uv += noise(vec3(uv - float(i) * 0.2, uTime + float(i) * 32.0)) * uUvDistortionIntensity;
   }
@@ -119,8 +120,10 @@ void main() {
   float balancedInput = clamp((colourInput - 0.5) * 1.15 + 0.5, 0.0, 1.0);
   vec3 colour = gradient3(balancedInput, uColourPalette[0], uColourPalette[1], uColourPalette[2]);
 
-  float grain = noise(vec3(vUv * 600.0, uTime * 1.2 + uSeed));
-  colour = clamp(colour + vec3(grain * 0.02), 0.0, 1.0);
+  if (uGrain > 0.5) {
+    float grain = noise(vec3(vUv * 600.0, uTime * 1.2 + uSeed));
+    colour = clamp(colour + vec3(grain * 0.02), 0.0, 1.0);
+  }
 
   gl_FragColor = vec4(colour, 1.0);
 }

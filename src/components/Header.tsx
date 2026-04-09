@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import GradientCanvas from "./GradientCanvas";
-import { GRADIENT_SEED, GRADIENT_START_TIME } from "../gradientConfig";
+import GradientMirror from "./GradientMirror";
 
 const MASK: React.CSSProperties = {
   WebkitMaskImage: "url('/assets/campbell-brown-logo.svg')",
@@ -104,11 +103,7 @@ function HeaderCtaText({ clipPct, measureRef, mobile }: { clipPct: number; measu
               maskPosition: "left top",
             }}
           >
-            <GradientCanvas
-              className="h-full w-full"
-              seed={GRADIENT_SEED}
-              startTime={GRADIENT_START_TIME}
-            />
+            <GradientMirror className="h-full w-full" />
           </span>
 
           <span
@@ -178,8 +173,9 @@ export default function Header() {
         <a href="/" className="flex items-center" style={{ gap: layoutW < 900 ? "10px" : "14px", textDecoration: "none" }}>
           <div ref={logoRef} className="relative flex-shrink-0" style={{ width: 65, height: 42 }}>
             <div className="absolute inset-0" style={MASK}>
-              <GradientCanvas className="absolute inset-0 h-full w-full" seed={GRADIENT_SEED} startTime={GRADIENT_START_TIME} />
+              <GradientMirror className="absolute inset-0 h-full w-full" />
             </div>
+
             <div
               className="absolute inset-0"
               style={{

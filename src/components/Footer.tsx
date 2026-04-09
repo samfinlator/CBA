@@ -1,5 +1,4 @@
-import GradientCanvas from "./GradientCanvas";
-import { GRADIENT_SEED, GRADIENT_START_TIME } from "../gradientConfig";
+import GradientMirror from "./GradientMirror";
 
 export default function Footer() {
   return (
@@ -8,10 +7,9 @@ export default function Footer() {
         className="relative overflow-hidden px-[10px] pt-[48px] pb-0 md:px-[35px]"
         style={{ borderRadius: "5px" }}
       >
-        {/* Local gradient canvas — clipped by the border-radius */}
-        <GradientCanvas className="absolute inset-0 w-full h-full" seed={GRADIENT_SEED} startTime={GRADIENT_START_TIME} />
-
-        {/* Content sits above the canvas */}
+        {/* Mirror of the main WebGL gradient — clipped by the border-radius */}
+        <GradientMirror className="absolute inset-0 w-full h-full" />
+        {/* Content sits above the gradient */}
         <div className="relative z-10">
         {/* Bottom row — links + copyright */}
         <div className="flex flex-col gap-6 px-0 py-2.5 md:flex-row md:items-center md:justify-between md:gap-7">

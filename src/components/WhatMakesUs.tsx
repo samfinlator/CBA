@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import GradientCanvas from "./GradientCanvas";
-import { GRADIENT_SEED, GRADIENT_START_TIME } from "../gradientConfig";
+import GradientMirror from "./GradientMirror";
 
 interface Value {
   label: string;
@@ -146,7 +145,7 @@ function ValueCard({
             zIndex: 20,
           }}
         >
-          <GradientCanvas className="absolute inset-0 h-full w-full" seed={GRADIENT_SEED} startTime={GRADIENT_START_TIME} />
+          <GradientMirror className="absolute inset-0 h-full w-full" />
           <div
             className="absolute inset-0"
             style={{

@@ -3,8 +3,9 @@
   "configurations": [
     {
       "name": "campbell-brown",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "/Users/samfinlator/.nvm/versions/node/v20.19.6/bin/node",
+      "runtimeArgs": ["node_modules/.bin/vite"],
+      "env": { "PATH": "/Users/samfinlator/.nvm/versions/node/v20.19.6/bin:/usr/bin:/bin:/usr/sbin:/sbin" },
       "port": 5173
     }
   ]

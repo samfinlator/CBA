@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { PREFERS_REDUCED_MOTION } from "../utils/deviceCapability";
 
 interface Testimonial {
   name: string;
@@ -136,6 +137,7 @@ function Avatar({ src, name }: { src?: string; name: string }) {
       <img
         src={src}
         alt={name}
+        loading="lazy"
         className="flex-shrink-0 object-cover grayscale"
         style={{ width: 44, height: 44, borderRadius: 2 }}
       />
@@ -221,6 +223,9 @@ function TickerRow({
   const rafRef       = useRef<number | undefined>(undefined);
 
   useEffect(() => {
+    // Skip animation entirely if user prefers reduced motion
+    if (PREFERS_REDUCED_MOTION) return;
+
     function tick(t: number) {
       const dt = lastTRef.current !== undefined ? (t - lastTRef.current) / 1000 : 0;
       lastTRef.current = t;

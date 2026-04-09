@@ -199,6 +199,7 @@ function PersonCard({
         <img
           src={member.photo}
           alt={member.name}
+          loading="lazy"
           style={{
             width: cardW,
             height: cardW,
@@ -314,6 +315,7 @@ function MobilePersonRow({
         <img
           src={member.photo}
           alt={member.name}
+          loading="lazy"
           style={{
             width: 80,
             height: 80,

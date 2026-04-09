@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { IS_MOBILE, PREFERS_REDUCED_MOTION } from "../utils/deviceCapability";
 
 /**
  * Animated WebGL gradient background.
@@ -9,6 +10,14 @@ import { useEffect, useRef } from "react";
  * each frame. The fixed canvas uses offset=(0,0) scale=(1,1). Local canvases
  * compute their slice from getBoundingClientRect(), so every instance is a
  * window into the same gradient — truly one gradient, masked in different areas.
+ *
+ * Mobile optimizations:
+ * - DPR capped at 1.0 (vs 2.0 on desktop)
+ * - RAF throttled to 30fps
+ * - Reduced noise iterations (2 vs 6)
+ * - Grain effect disabled
+ * - IntersectionObserver pauses off-screen non-fixed canvases
+ * - getBoundingClientRect cached (updated on scroll/resize only)
  */
 export default function GradientCanvas({
   className = "",
@@ -27,11 +36,18 @@ export default function GradientCanvas({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl = canvas.getContext("webgl", { alpha: false, antialias: false });
+    const gl = canvas.getContext("webgl", {
+      alpha: false,
+      antialias: false,
+      // preserveDrawingBuffer is needed when other canvases read from this one
+      // via drawImage(). Without it the backbuffer may be cleared after compositing.
+      preserveDrawingBuffer: fixed,
+    });
     if (!gl) return;
 
     let rafId: number | null = null;
     let destroyed = false;
+    let visible = true; // IntersectionObserver state
 
     const stop = () => {
       if (rafId !== null) cancelAnimationFrame(rafId);
@@ -96,6 +112,7 @@ export default function GradientCanvas({
         uSeed:      gl.getUniformLocation(prog, "uSeed"),
         uVpOffset:  gl.getUniformLocation(prog, "uViewportUvOffset"),
         uVpScale:   gl.getUniformLocation(prog, "uViewportUvScale"),
+        uGrain:     gl.getUniformLocation(prog, "uGrain"),
       };
 
       // magenta → gold → cyan
@@ -109,13 +126,14 @@ export default function GradientCanvas({
       gl.uniform3fv(u.uPalette, palette);
       gl.uniform1f(u.uSeed,      resolvedSeed);
       gl.uniform1f(u.uScale,     0.5);
-      gl.uniform1f(u.uIter,      6.0);
+      gl.uniform1f(u.uIter,      IS_MOBILE ? 2.0 : 6.0);
       gl.uniform1f(u.uIntensity, 0.15);
+      gl.uniform1f(u.uGrain,     IS_MOBILE ? 0.0 : 1.0);
       gl.disable(gl.DEPTH_TEST);
 
       // ── resize ──
       const resize = () => {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const dpr = Math.min(window.devicePixelRatio || 1, IS_MOBILE ? 1.0 : 2);
         let width: number, height: number;
         if (fixed) {
           width  = window.innerWidth;
@@ -132,10 +150,36 @@ export default function GradientCanvas({
       resize();
       window.addEventListener("resize", resize);
 
+      // ── cached rect for non-fixed canvases ──
+      let cachedRect = canvas.getBoundingClientRect();
+      const updateCachedRect = () => {
+        cachedRect = canvas.getBoundingClientRect();
+      };
+      if (!fixed) {
+        window.addEventListener("scroll", updateCachedRect, { passive: true });
+        window.addEventListener("resize", updateCachedRect);
+      }
+
       // ── render loop ──
       const t0 = startTime ?? performance.now();
+      const targetInterval = IS_MOBILE ? 1000 / 30 : 0; // 30fps on mobile
+      let lastFrameTime = 0;
+      let renderedOnce = false;
+
       const render = (now: number) => {
         if (destroyed || gl.isContextLost()) return;
+
+        // Schedule next frame first
+        rafId = requestAnimationFrame(render);
+
+        // Skip if not visible (non-fixed canvases)
+        if (!visible && !fixed) return;
+
+        // Throttle on mobile
+        if (targetInterval > 0 && now - lastFrameTime < targetInterval && renderedOnce) return;
+        lastFrameTime = now;
+        renderedOnce = true;
+
         const elapsed = (now - t0) / 1000;
         gl.uniform1f(u.uTime,   elapsed * 0.06);
         gl.uniform1f(u.uScroll, 0.0);
@@ -145,11 +189,10 @@ export default function GradientCanvas({
           gl.uniform2f(u.uVpOffset, 0.0, 0.0);
           gl.uniform2f(u.uVpScale,  1.0, 1.0);
         } else {
-          const rect = canvas.getBoundingClientRect();
+          const rect = cachedRect;
           const vpW  = window.innerWidth;
           const vpH  = window.innerHeight;
           const offX =  rect.left / vpW;
-          // Flip Y: WebGL origin is bottom-left, CSS origin is top-left
           const offY = (vpH - rect.top - rect.height) / vpH;
           const scX  =  rect.width  / vpW;
           const scY  =  rect.height / vpH;
@@ -158,13 +201,33 @@ export default function GradientCanvas({
         }
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-        rafId = requestAnimationFrame(render);
+
+        // If reduced motion, render one frame and stop
+        if (PREFERS_REDUCED_MOTION) {
+          stop();
+          return;
+        }
       };
       rafId = requestAnimationFrame(render);
+
+      // ── IntersectionObserver for non-fixed canvases ──
+      let observer: IntersectionObserver | undefined;
+      if (!fixed) {
+        observer = new IntersectionObserver(
+          ([entry]) => { visible = entry.isIntersecting; },
+          { threshold: 0 }
+        );
+        observer.observe(canvas);
+      }
 
       // ── cleanup ──
       return () => {
         window.removeEventListener("resize", resize);
+        if (!fixed) {
+          window.removeEventListener("scroll", updateCachedRect);
+          window.removeEventListener("resize", updateCachedRect);
+        }
+        observer?.disconnect();
       };
     };
 
@@ -181,6 +244,7 @@ export default function GradientCanvas({
   return (
     <canvas
       ref={canvasRef}
+      id={fixed ? "gradient-source" : undefined}
       className={className}
       style={{ display: "block", width: "100%", height: "100%" }}
     />

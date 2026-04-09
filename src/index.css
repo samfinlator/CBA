@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: 'NGT Vina Sans Neue';
-  src: url('./assets/fonts/NGTVinaSans-Neue.ttf') format('truetype');
+  src: url('/assets/fonts/NGTVinaSans-Neue.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -12,30 +12,9 @@
 
 @font-face {
   font-family: 'ABC ROM';
-  src: url('/assets/fonts/ABCROM-Light-Trial.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'ABC ROM';
-  src: url('/assets/fonts/ABCROM-LightItalic-Trial.woff2') format('woff2');
-  font-weight: 300;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'ABC ROM';
   src: url('/assets/fonts/ABCROM-Book-Trial.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'ABC ROM';
-  src: url('/assets/fonts/ABCROM-BookItalic-Trial.woff2') format('woff2');
-  font-weight: 400;
-  font-style: italic;
   font-display: swap;
 }
 @font-face {
@@ -56,13 +35,6 @@
   font-family: 'ABC ROM';
   src: url('/assets/fonts/ABCROM-Bold-Trial.woff2') format('woff2');
   font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'ABC ROM';
-  src: url('/assets/fonts/ABCROM-Black-Trial.woff2') format('woff2');
-  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
@@ -229,6 +201,29 @@ body {
   50% { background-position: 100% 50%; }
 }
 
+/* ── Gradient Background (CSS replacement for small WebGL canvases) ── */
+
+.gradient-bg {
+  background: linear-gradient(135deg, #ff0cf0, #ffb103, #00b5fc, #ff0cf0);
+  background-size: 300% 300%;
+  animation: gradient-shift-bg 8s ease infinite;
+}
+
+@keyframes gradient-shift-bg {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ── Reduced Motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ticker,
+  .animate-ticker-reverse,
+  .gradient-text,
+  .gradient-bg {
+    animation: none !important;
+  }
+}
 
 @media (max-width: 900px) {
   html {
