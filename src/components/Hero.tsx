@@ -15,7 +15,6 @@ export default function Hero() {
       setIsMobile(viewportW < 900);
     };
 
-    fit();
     window.addEventListener("resize", fit);
     return () => {
       window.removeEventListener("resize", fit);

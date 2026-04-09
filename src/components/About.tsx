@@ -26,9 +26,11 @@ export default function About() {
             <div className="flex flex-col">
               <div className="overflow-hidden pb-6">
                 <img
-                  src="/assets/team-photo.jpg"
+                  src="/assets/team-photo.webp"
                   alt="Campbell Brown team"
                   loading="lazy"
+                  width={1302}
+                  height={898}
                   className="w-full"
                 />
               </div>
@@ -114,8 +116,10 @@ export default function About() {
 
             <div className="flex w-1/2 items-start justify-end overflow-hidden px-8 py-5">
               <img
-                src="/assets/team-photo.jpg"
+                src="/assets/team-photo.webp"
                 alt="Campbell Brown team"
+                width={1302}
+                height={898}
                 className="w-full max-w-[90%] max-[1095px]:max-w-full"
               />
             </div>

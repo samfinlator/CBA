@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { subscribe } from "../utils/gradientSampler";
 
 interface Quote {
   attribution: string;
@@ -6,11 +7,32 @@ interface Quote {
 }
 
 
-const GradientPhrase = ({ children }: { children: React.ReactNode }) => (
-  <span className="gradient-text">
-    {children}
-  </span>
-);
+const GradientPhrase = ({ children }: { children: React.ReactNode }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    return subscribe((url) => {
+      el.style.backgroundImage = `url(${url})`;
+    });
+  }, []);
+
+  return (
+    <span
+      ref={ref}
+      style={{
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+      }}
+    >
+      {children}
+    </span>
+  );
+};
 
 const quotes: Quote[] = [
   {
@@ -98,6 +120,9 @@ export default function FeaturedQuotes() {
 
   const snapPending  = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const dragStartXRef = useRef(0);
+  const dragDeltaRef = useRef(0);
+  const isDraggingRef = useRef(false);
 
   /* ── Track container width ────────────────────────────────────── */
   useEffect(() => {
@@ -147,6 +172,39 @@ export default function FeaturedQuotes() {
   const sideVisual  = cardW * sideScale;
   const marginComp  = (cardW - sideVisual) / 2;
 
+  const dragThreshold = 48;
+
+  function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    if (containerW >= 1024) return;
+    isDraggingRef.current = true;
+    dragStartXRef.current = e.clientX;
+    dragDeltaRef.current = 0;
+    setIsHovered(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+
+  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!isDraggingRef.current) return;
+    dragDeltaRef.current = e.clientX - dragStartXRef.current;
+  }
+
+  function onPointerEnd() {
+    if (!isDraggingRef.current) return;
+    const delta = dragDeltaRef.current;
+    isDraggingRef.current = false;
+    dragDeltaRef.current = 0;
+    setIsHovered(false);
+
+    if (snapPending.current || Math.abs(delta) < dragThreshold) return;
+
+    setAnimate(true);
+    setActive((prev) => {
+      if (delta < 0) return prev + 1;
+      if (prev <= N) return prev + N - 1;
+      return prev - 1;
+    });
+  }
+
   /* ── Position calculation ─────────────────────────────────────── */
   const widths   = extended.map((_, i) => (i === active ? cardW : sideVisual));
   const centres: number[] = [];
@@ -164,11 +222,15 @@ export default function FeaturedQuotes() {
       style={{ paddingTop: sectionPy, paddingBottom: sectionPy }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerEnd}
+      onPointerCancel={onPointerEnd}
     >
       <div
         ref={containerRef}
         className="relative mx-auto max-w-[1512px]"
-        style={{ padding: "20px 0" }}
+        style={{ padding: "20px 0", cursor: containerW < 1024 ? "grab" : undefined, touchAction: containerW < 1024 ? "pan-y" : undefined }}
       >
         <div
           style={{

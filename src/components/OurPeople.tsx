@@ -28,7 +28,7 @@ const team: TeamMember[] = [
     id: "nick",
     name: "Nick Brown",
     role: "Founder / Director",
-    photo: "/assets/team-nick.jpg",
+    photo: "/assets/team-nick.webp",
     linkedin: "https://www.linkedin.com/in/nick-brown-6627244/",
     email: "nick@campbellbrown.co.uk",
     bio: "Nick founded Campbell Brown Associates in 2010, following 13 years running the media practice at a leading London search firm. He was part of the management team that successfully exited in 2005. Before that, he qualified as a chartered accountant at PWC. Up until 2023, Nick operated alone, placing hundreds of senior finance professionals, principally into media and technology. Over time, he has built an enviable reputation across the space and it's a real challenge to find someone in the field who isn't connected to him.",
@@ -37,7 +37,7 @@ const team: TeamMember[] = [
     id: "sophie",
     name: "Sophie Allen",
     role: "Account Director",
-    photo: "/assets/team-sophie.jpg",
+    photo: "/assets/team-sophie.webp",
     linkedin: "https://www.linkedin.com/in/sophieallenrecruitment/",
     email: "sophie@campbellbrown.co.uk",
     bio: "Sophie has been hiring senior finance roles within the media and marketing sector for 25 years – predominantly in the UK, but also including a 2 year stint in Australia. Her accumulated knowledge, in the media space, is second to none. Her clients will confirm her ability to fill any job, at pace. But it's not all about filling roles – her empathic approach fits the CBA ethos perfectly, treating all her candidates with the same care and attention as the clients they will one day become.",
@@ -46,7 +46,7 @@ const team: TeamMember[] = [
     id: "kirsten",
     name: "Kirsten Wilson",
     role: "Account Director",
-    photo: "/assets/team-kirsten.jpg",
+    photo: "/assets/team-kirsten.webp",
     linkedin: "https://www.linkedin.com/in/kirstenwilson1/?originalSubdomain=uk",
     email: "kirsten@campbellbrown.co.uk",
     bio: "Kirsten spent 12 years heading up a successful 'Interim and Contract' team, specialising in media finance before moving to the South Coast where she gained experience placing accountants across a more diverse client base. She is a huge asset to CBA, working quickly and relentlessly across a range of roles, instinctively leveraging her network, both in and out of the media and tech spaces.",
@@ -95,8 +95,10 @@ function ToggleIcon({ open }: { open: boolean }) {
 
 function VerticalDivider({
   opacity = 1,
+  hideConnectors = false,
 }: {
   opacity?: number;
+  hideConnectors?: boolean;
 }) {
   return (
     <div
@@ -134,6 +136,8 @@ function VerticalDivider({
           height: 12,
           pointerEvents: "none",
           zIndex: 3,
+          opacity: hideConnectors ? 0 : 1,
+          transition: `opacity ${T}ms ease`,
         }}
       />
       <img
@@ -149,6 +153,8 @@ function VerticalDivider({
           height: 12,
           pointerEvents: "none",
           zIndex: 3,
+          opacity: hideConnectors ? 0 : 1,
+          transition: `opacity ${T}ms ease`,
         }}
       />
     </div>
@@ -559,22 +565,7 @@ export default function OurPeople() {
               }}
             >
               {/* Divider */}
-              <div
-                style={{
-                  width: 1.5,
-                  flexShrink: 0,
-                  opacity: isHovering ? 0 : 1,
-                  transition: `opacity ${T}ms ease`,
-                  position: "relative",
-                  zIndex: 2,
-                }}
-              >
-                <div style={{ position: "absolute", top: 20, bottom: 20, width: "100%", backgroundColor: "#E9E9E9" }} />
-                <div style={{ position: "absolute", top: 0,    left: -20, width: 40, height: 1.5, backgroundColor: "var(--color-page)", zIndex: 2 }} />
-                <div style={{ position: "absolute", bottom: 0, left: -20, width: 40, height: 1.5, backgroundColor: "var(--color-page)", zIndex: 2 }} />
-                <img src="/assets/connector-t-down.svg" alt="" aria-hidden="true" style={{ position: "absolute", top: 0,    left: -10, width: 20, height: 12, pointerEvents: "none", zIndex: 3 }} />
-                <img src="/assets/connector-t-up.svg"   alt="" aria-hidden="true" style={{ position: "absolute", bottom: 0, left: -10, width: 20, height: 12, pointerEvents: "none", zIndex: 3 }} />
-              </div>
+              <VerticalDivider opacity={isHovering ? 0 : 1} hideConnectors={isHovering} />
               {/* Default bio text */}
               <div style={{ width: bioW, paddingTop: 25, paddingBottom: 30, paddingLeft: 20, flexShrink: 0 }}>
                 <p

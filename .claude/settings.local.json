@@ -47,7 +47,21 @@
       "Bash(pip3 install:*)",
       "Bash(python3 -c \"from fontTools.ttLib import TTFont; f = TTFont\\(''/Users/samfinlator/Desktop/Work/Campell Brown/Main/src/assets/fonts/NGTVinaSans-Neue.ttf''\\); f.flavor = ''woff2''; f.save\\(''/Users/samfinlator/Desktop/Work/Campell Brown/Main/public/assets/fonts/NGTVinaSans-Neue.woff2''\\); print\\(''done''\\)\")",
       "Bash(python3 -m pip install fonttools brotli)",
-      "Bash(python3 -m pip install --user fonttools brotli)"
+      "Bash(python3 -m pip install --user fonttools brotli)",
+      "Bash(ls -la public/assets/logo-*.webp)",
+      "Bash(ls -la public/assets/testimonial-*.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight public/assets/team-photo.jpg public/assets/team-kirsten.jpg public/assets/team-sophie.jpg public/assets/team-nick.jpg)",
+      "Bash(sips -g pixelWidth -g pixelHeight public/assets/testimonial-adrian.png public/assets/testimonial-andrew.png public/assets/testimonial-dan.png public/assets/testimonial-duncan.png public/assets/testimonial-jaime.png public/assets/testimonial-marcus.png public/assets/testimonial-mark-bentley.png public/assets/testimonial-michael.png public/assets/testimonial-nik.png public/assets/testimonial-oliver.png public/assets/testimonial-radhika.png public/assets/testimonial-steve.png)",
+      "Bash(npm install:*)",
+      "Bash(export PATH=\"/Users/samfinlator/.nvm/versions/node/v20.19.6/bin:$PATH\")",
+      "Bash(node optimize-images.mjs)",
+      "Bash(export PATH=\"/Users/samfinlator/.nvm/versions/node/v20.19.6/bin:/opt/homebrew/bin:/usr/local/bin:$PATH\")",
+      "Bash(brew install:*)",
+      "Bash(node -e \":*)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH\")",
+      "Bash(pdftoppm --version)",
+      "Bash(export PATH=\"/usr/local/bin:$PATH\")",
+      "Bash(pdftotext \"/Users/samfinlator/Desktop/PageSpeed Insights.pdf\" -)"
     ]
   }
 }

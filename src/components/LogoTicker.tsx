@@ -2,33 +2,33 @@ import { useEffect, useRef, useState } from "react";
 import { PREFERS_REDUCED_MOTION } from "../utils/deviceCapability";
 
 const logos = [
-  { src: "/logos/logo-msq.webp", alt: "MSQ" },
-  { src: "/logos/logo-amplify.webp", alt: "Amplify" },
-  { src: "/logos/logo-hawkstone.webp", alt: "Hawkstone" },
-  { src: "/logos/logo-zincmediagroup.webp", alt: "Zinc Media Group" },
-  { src: "/logos/logo-mother.webp", alt: "Mother" },
-  { src: "/logos/logo-talon.webp", alt: "Talon" },
-  { src: "/logos/logo-outpost.webp", alt: "Outpost" },
-  { src: "/logos/logo-surrealdb.webp", alt: "SurrealDB" },
-  { src: "/logos/logo-trinnylondon.webp", alt: "Trinny London" },
-  { src: "/logos/logo-snoop.webp", alt: "Snoop" },
-  { src: "/logos/logo-passionpictures.webp", alt: "Passion Pictures" },
-  { src: "/logos/logo-next15.webp", alt: "Next 15" },
-  { src: "/logos/logo-monterosa.webp", alt: "Monterosa" },
-  { src: "/logos/logo-mhpcommunications.webp", alt: "MHP Communications" },
-  { src: "/logos/logo-mailonline.webp", alt: "Mail Online" },
-  { src: "/logos/logo-jellyfish.webp", alt: "Jellyfish" },
-  { src: "/logos/logo-ipgmediabrands.webp", alt: "IPG Mediabrands" },
-  { src: "/logos/logo-envelopinsurtech.webp", alt: "Envelop Insurtech" },
-  { src: "/logos/logo-bbh.webp", alt: "BBH" },
-  { src: "/logos/logo-unicef.webp", alt: "UNICEF" },
-  { src: "/logos/logo-bafta.webp", alt: "BAFTA" },
-  { src: "/logos/logo-cassart.webp", alt: "Cass Art" },
-  { src: "/logos/logo-royalacademy.webp", alt: "Royal Academy" },
-  { src: "/logos/logo-stvstudio.webp", alt: "STV Studios" },
-  { src: "/logos/logo-thameshudson.webp", alt: "Thames & Hudson" },
-  { src: "/logos/logo-untold.webp", alt: "Untold" },
-  { src: "/logos/logo-workingtitle.webp", alt: "Working Title" },
+  { src: "/logos/logo-msq.webp", alt: "MSQ", width: 240, height: 48 },
+  { src: "/logos/logo-amplify.webp", alt: "Amplify", width: 240, height: 48 },
+  { src: "/logos/logo-hawkstone.webp", alt: "Hawkstone", width: 240, height: 48 },
+  { src: "/logos/logo-zincmediagroup.webp", alt: "Zinc Media Group", width: 240, height: 48 },
+  { src: "/logos/logo-mother.webp", alt: "Mother", width: 240, height: 48 },
+  { src: "/logos/logo-talon.webp", alt: "Talon", width: 240, height: 48 },
+  { src: "/logos/logo-outpost.webp", alt: "Outpost", width: 240, height: 48 },
+  { src: "/logos/logo-surrealdb.webp", alt: "SurrealDB", width: 240, height: 48 },
+  { src: "/logos/logo-trinnylondon.webp", alt: "Trinny London", width: 240, height: 48 },
+  { src: "/logos/logo-snoop.webp", alt: "Snoop", width: 240, height: 48 },
+  { src: "/logos/logo-passionpictures.webp", alt: "Passion Pictures", width: 240, height: 48 },
+  { src: "/logos/logo-next15.webp", alt: "Next 15", width: 240, height: 48 },
+  { src: "/logos/logo-monterosa.webp", alt: "Monterosa", width: 240, height: 48 },
+  { src: "/logos/logo-mhpcommunications.webp", alt: "MHP Communications", width: 240, height: 48 },
+  { src: "/logos/logo-mailonline.webp", alt: "Mail Online", width: 240, height: 48 },
+  { src: "/logos/logo-jellyfish.webp", alt: "Jellyfish", width: 240, height: 48 },
+  { src: "/logos/logo-ipgmediabrands.webp", alt: "IPG Mediabrands", width: 240, height: 48 },
+  { src: "/logos/logo-envelopinsurtech.webp", alt: "Envelop Insurtech", width: 240, height: 48 },
+  { src: "/logos/logo-bbh.webp", alt: "BBH", width: 240, height: 48 },
+  { src: "/logos/logo-unicef.webp", alt: "UNICEF", width: 240, height: 48 },
+  { src: "/logos/logo-bafta.webp", alt: "BAFTA", width: 240, height: 48 },
+  { src: "/logos/logo-cassart.webp", alt: "Cass Art", width: 240, height: 48 },
+  { src: "/logos/logo-royalacademy.webp", alt: "Royal Academy", width: 240, height: 48 },
+  { src: "/logos/logo-stvstudio.webp", alt: "STV Studios", width: 240, height: 48 },
+  { src: "/logos/logo-thameshudson.webp", alt: "Thames & Hudson", width: 240, height: 48 },
+  { src: "/logos/logo-untold.webp", alt: "Untold", width: 240, height: 48 },
+  { src: "/logos/logo-workingtitle.webp", alt: "Working Title", width: 240, height: 48 },
 ];
 
 const SPEED = 40; // px per second
@@ -43,7 +43,7 @@ export default function LogoTicker() {
   const posRef = useRef(0);
   const rafRef = useRef<number | undefined>(undefined);
   const lastTRef = useRef<number | undefined>(undefined);
-  const lastWidthRef = useRef(getViewportWidth());
+  const lastWidthRef = useRef(0);
   const [isMobile, setIsMobile] = useState(() => getViewportWidth() < 900);
 
   useEffect(() => {
@@ -116,6 +116,7 @@ export default function LogoTicker() {
       start();
     };
 
+    lastWidthRef.current = getViewportWidth();
     waitForImages();
     window.addEventListener("resize", handleResize);
 
@@ -148,6 +149,8 @@ export default function LogoTicker() {
                 key={`${copy}-${logo.alt}`}
                 src={logo.src}
                 alt={logo.alt}
+                width={logo.width}
+                height={logo.height}
                 className="h-5 md:h-6 max-w-[92px] md:max-w-[120px] object-contain opacity-60 grayscale flex-shrink-0"
               />
             ))}
