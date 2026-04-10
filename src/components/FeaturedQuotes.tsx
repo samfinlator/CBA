@@ -14,7 +14,12 @@ const GradientPhrase = ({ children }: { children: React.ReactNode }) => {
     const el = ref.current;
     if (!el) return;
     return subscribe((url) => {
+      const rect = el.getBoundingClientRect();
+      const viewportW = document.documentElement.clientWidth || window.innerWidth || 1;
+      const viewportH = document.documentElement.clientHeight || window.innerHeight || 1;
       el.style.backgroundImage = `url(${url})`;
+      el.style.backgroundSize = `${viewportW}px ${viewportH}px`;
+      el.style.backgroundPosition = `${-rect.left}px ${-rect.top}px`;
     });
   }, []);
 
@@ -22,8 +27,7 @@ const GradientPhrase = ({ children }: { children: React.ReactNode }) => {
     <span
       ref={ref}
       style={{
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
