@@ -64,7 +64,8 @@
       "Bash(pdftotext \"/Users/samfinlator/Desktop/PageSpeed Insights.pdf\" -)",
       "Bash(gh auth:*)",
       "Read(//usr/local/bin/**)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "WebFetch(domain:cba-lake.vercel.app)"
     ]
   }
 }
