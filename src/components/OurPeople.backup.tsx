@@ -212,7 +212,7 @@ export default function OurPeople() {
           style={{ display: "flex", gap: 20 }}
         >
           {/* Person cards */}
-          {team.map((member, i) => (
+          {team.map((member) => (
             <div key={member.id} style={{ display: "contents" }}>
               <PersonCard
                 member={member}

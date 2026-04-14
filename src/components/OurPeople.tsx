@@ -389,7 +389,7 @@ export default function OurPeople() {
               </p>
             </div>
             <div>
-              {team.map((member, index) => (
+              {team.map((member) => (
                 <div key={member.id}>
                   <MobilePersonRow
                     member={member}
