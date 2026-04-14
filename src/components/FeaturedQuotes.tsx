@@ -32,14 +32,13 @@ const GradientPhrase = ({ children }: { children: React.ReactNode }) => {
     <span
       ref={ref}
       style={{
+        display: "inline-block",
         backgroundRepeat: "no-repeat",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
-        WebkitBoxDecorationBreak: "clone",
-        boxDecorationBreak: "clone",
-        paddingRight: "0.04em",
-        marginRight: "-0.04em",
+        paddingRight: "0.08em",
+        marginRight: "-0.08em",
       }}
     >
       {children}

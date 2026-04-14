@@ -47,9 +47,11 @@ export default function GradientCanvas({
       preserveDrawingBuffer: fixed,
     };
     // Try WebGL2 first (better ANGLE/Windows compatibility), fall back to WebGL1
-    const gl =
-      (canvas.getContext("webgl2", ctxOpts) as WebGLRenderingContext | null) ??
-      canvas.getContext("webgl", ctxOpts);
+    const gl = (
+      canvas.getContext("webgl2", ctxOpts) as WebGL2RenderingContext | null
+    ) ?? (
+      canvas.getContext("webgl", ctxOpts) as WebGLRenderingContext | null
+    );
     if (!gl) {
       setWebglFailed(true);
       return;
