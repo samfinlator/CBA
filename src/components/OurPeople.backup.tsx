@@ -61,65 +61,6 @@ function EmailIcon() {
   );
 }
 
-/* ── Vertical Divider with T-Connectors ────────────────────────── */
-
-function VerticalDivider({ opacity = 1 }: { opacity?: number }) {
-  return (
-    <div
-      className="relative flex-shrink-0"
-      style={{
-        width: 1.5,
-        opacity,
-        transition: `opacity ${T}ms ease`,
-        zIndex: 2,
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 20,
-          bottom: 20,
-          width: "100%",
-          backgroundColor: "#E9E9E9",
-        }}
-      />
-      {/* Mask strips — 40px wide (10px gap + 20px arm + 10px gap) to match TrackRecord breathing room */}
-      <div style={{ position: "absolute", top: 0,    left: -20, width: 40, minWidth: 40, height: 1.5, backgroundColor: "var(--color-page)", zIndex: 2 }} />
-      <div style={{ position: "absolute", bottom: 0, left: -20, width: 40, minWidth: 40, height: 1.5, backgroundColor: "var(--color-page)", zIndex: 2 }} />
-      {/* T-connector images sit on top of the mask strips */}
-      <img
-        src="/assets/connector-t-down.svg"
-        alt=""
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: -10,
-          width: 20,
-          minWidth: 20,
-          height: 12,
-          pointerEvents: "none",
-          zIndex: 3,
-        }}
-      />
-      <img
-        src="/assets/connector-t-up.svg"
-        alt=""
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: -10,
-          width: 20,
-          minWidth: 20,
-          height: 12,
-          pointerEvents: "none",
-          zIndex: 3,
-        }}
-      />
-    </div>
-  );
-}
 
 /* ── Person Card ───────────────────────────────────────────────── */
 
@@ -270,37 +211,9 @@ export default function OurPeople() {
           className="relative"
           style={{ display: "flex", gap: 20 }}
         >
-          {/* Top horizontal line */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 1.5,
-              backgroundColor: "#E9E9E9",
-              pointerEvents: "none",
-              zIndex: 1,
-            }}
-          />
-          {/* Bottom horizontal line */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 1.5,
-              backgroundColor: "#E9E9E9",
-              pointerEvents: "none",
-              zIndex: 1,
-            }}
-          />
-
-          {/* Person cards with dividers */}
+          {/* Person cards */}
           {team.map((member, i) => (
             <div key={member.id} style={{ display: "contents" }}>
-              {i > 0 && <VerticalDivider />}
               <PersonCard
                 member={member}
                 isActive={hovered === member.id}
@@ -309,9 +222,6 @@ export default function OurPeople() {
               />
             </div>
           ))}
-
-          {/* Divider before default bio */}
-          <VerticalDivider opacity={isHovering ? 0 : 1} />
 
           {/* Default bio panel — shrinks to 0 when someone is hovered */}
           <div

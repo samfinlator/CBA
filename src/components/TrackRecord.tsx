@@ -160,25 +160,12 @@ function Avatar({ src, name }: { src?: string; name: string }) {
 
 /* ── Card ────────────────────────────────────────────────────── */
 
-function TestimonialCard({ t, showBottomLine = true }: { t: Testimonial; showBottomLine?: boolean }) {
+function TestimonialCard({ t }: { t: Testimonial }) {
   return (
     <div
       className="relative flex-shrink-0 flex flex-col"
       style={{ width: 380, padding: "20px 20px 20px" }}
     >
-      <div className="absolute pointer-events-none"
-        style={{ left: 20, right: 20, top: -1.5, height: "1.5px", backgroundColor: "#E9E9E9" }} />
-      {showBottomLine && (
-        <div className="absolute pointer-events-none"
-          style={{ left: 20, right: 20, bottom: -1.5, height: "1.5px", backgroundColor: "#E9E9E9" }} />
-      )}
-      <div className="absolute pointer-events-none"
-        style={{ right: 0, top: 20, bottom: 21, width: "1.5px", backgroundColor: "#E9E9E9" }} />
-      <img src="/assets/connector-t-down.svg" alt=""
-        style={{ position: "absolute", pointerEvents: "none", top: -1.5, right: -10, width: 20, height: 12, zIndex: 10 }} />
-      <img src="/assets/connector-t-up.svg" alt=""
-        style={{ position: "absolute", pointerEvents: "none", bottom: showBottomLine ? -1.5 : 0, right: -10, width: 20, height: 12, zIndex: 10 }} />
-
       <div className="flex items-center mb-4" style={{ gap: 12 }}>
         <Avatar src={t.avatar} name={t.name} />
         <div>
@@ -317,7 +304,7 @@ function TickerRow({
         style={{ transform: `translateX(${posRef.current}px)` }}
       >
         {doubled.map((t, i) => (
-          <TestimonialCard key={i} t={t} showBottomLine={showBottomLine} />
+          <TestimonialCard key={i} t={t} />
         ))}
       </div>
     </div>

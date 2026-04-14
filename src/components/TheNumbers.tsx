@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import LineFrame from "./LineFrame";
 
 interface Stat {
   value: string;
@@ -162,9 +161,7 @@ function DesktopStatCard({ stat }: { stat: Stat }) {
 
 export default function TheNumbers() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const compactGridRef = useRef<HTMLDivElement>(null);
   const [containerW, setContainerW] = useState(1432);
-  const [compactRowOffsets, setCompactRowOffsets] = useState<number[]>([]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -176,30 +173,6 @@ export default function TheNumbers() {
     return () => ro.disconnect();
   }, []);
 
-  useEffect(() => {
-    const grid = compactGridRef.current;
-    if (!grid || containerW >= 1100) return;
-
-    const update = () => {
-      const children = Array.from(grid.children) as HTMLElement[];
-      if (children.length < 6) return;
-      const gridTop = grid.getBoundingClientRect().top;
-      const row2Top = children[2].getBoundingClientRect().top - gridTop;
-      const row3Top = children[4].getBoundingClientRect().top - gridTop;
-      setCompactRowOffsets([row2Top, row3Top]);
-    };
-
-    const ro = new ResizeObserver(() => update());
-    ro.observe(grid);
-    Array.from(grid.children).forEach((child) => ro.observe(child as Element));
-    update();
-    window.addEventListener("resize", update);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", update);
-    };
-  }, [containerW]);
-
   const isCompact = containerW < 1100;
 
   return (
@@ -209,21 +182,17 @@ export default function TheNumbers() {
 
         <div style={{ backgroundColor: "var(--color-page)" }}>
           {!isCompact ? (
-            <LineFrame columns={3} rows={2} crossConnectorSrc="/assets/connector-cross.svg" hideOuterVerticals>
               <div className="grid grid-cols-3">
                 {stats.map((stat) => (
                   <DesktopStatCard key={stat.label} stat={stat} />
                 ))}
               </div>
-            </LineFrame>
           ) : (
-            <LineFrame columns={2} rows={3} crossConnectorSrc="/assets/connector-cross.svg" hideOuterVerticals rowDividerOffsets={compactRowOffsets}>
-              <div ref={compactGridRef} className="grid grid-cols-2">
+              <div className="grid grid-cols-2">
                 {stats.map((stat, index) => (
                   <CompactStatCard key={stat.label} stat={stat} isLeftColumn={index % 2 === 0} />
                 ))}
               </div>
-            </LineFrame>
           )}
         </div>
       </div>

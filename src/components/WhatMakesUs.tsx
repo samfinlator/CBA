@@ -47,34 +47,6 @@ function getLayoutWidth() {
   return window.outerWidth || document.documentElement.clientWidth || window.innerWidth;
 }
 
-function Frame({
-  active,
-  railLeft,
-}: {
-  active: boolean;
-  railLeft: number;
-}) {
-  const leftConnectorX = active ? 0 : railLeft;
-  const horizontalLeft = active ? 21 : railLeft + 11;
-  const verticalTop = active ? 22 : 0;
-  const verticalBottom = active ? 22 : 0;
-
-  return (
-    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 40 }}>
-      <img src="/assets/left-connector-down.svg" alt="" className="absolute" style={{ top: 0, left: leftConnectorX, width: 11, height: 12, zIndex: 2 }} />
-      <img src="/assets/right-connector-down.svg" alt="" className="absolute" style={{ top: 0, right: 0, width: 12, height: 12, zIndex: 2 }} />
-      <img src="/assets/left-connector-up.svg" alt="" className="absolute" style={{ bottom: 0, left: leftConnectorX, width: 11, height: 12, zIndex: 2 }} />
-      <img src="/assets/right-connector-up.svg" alt="" className="absolute" style={{ bottom: 0, right: 0, width: 11, height: 12, zIndex: 2 }} />
-      <div className="absolute" style={{ top: 0, left: horizontalLeft, right: 21, height: 1.5, backgroundColor: "#E9E9E9" }} />
-      <div className="absolute" style={{ bottom: 0, left: horizontalLeft, right: 21, height: 1.5, backgroundColor: "#E9E9E9" }} />
-      {active && (
-        <div className="absolute" style={{ left: 0, top: verticalTop, bottom: verticalBottom, width: 1.5, backgroundColor: "#E9E9E9" }} />
-      )}
-      <div className="absolute" style={{ right: 0, top: verticalTop, bottom: verticalBottom, width: 1.5, backgroundColor: "#E9E9E9" }} />
-    </div>
-  );
-}
-
 function ValueCard({
   value,
   active,
@@ -155,8 +127,6 @@ function ValueCard({
             }}
           />
         </div>
-
-        <Frame active={active} railLeft={railLeft} />
 
         <div
           className="relative flex h-full flex-col"
@@ -338,9 +308,6 @@ export default function WhatMakesUs() {
         <h2 className="type-section-heading mb-5">What Makes Us</h2>
 
         <div className="relative" style={{ backgroundColor: "var(--color-page)" }}>
-          <div className="absolute left-0 right-0 top-0 pointer-events-none" style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
-          <div className="absolute left-0 right-0 bottom-0 pointer-events-none" style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
-
           <div
             className="flex"
             style={{

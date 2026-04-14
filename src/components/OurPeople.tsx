@@ -31,7 +31,7 @@ const team: TeamMember[] = [
     photo: "/assets/team-nick.webp",
     linkedin: "https://www.linkedin.com/in/nick-brown-6627244/",
     email: "nick@campbellbrown.co.uk",
-    bio: "Nick founded Campbell Brown Associates in 2010, following 13 years running the media practice at a leading London search firm. He was part of the management team that successfully exited in 2005. Before that, he qualified as a chartered accountant at PWC. Up until 2023, Nick operated alone, placing hundreds of senior finance professionals, principally into media and technology. Over time, he has built an enviable reputation across the space and it's a real challenge to find someone in the field who isn't connected to him.",
+    bio: "Nick founded Campbell Brown Associates in 2010, following 13 years running the media practice at a leading London search firm. He was part of the management team that successfully exited in 2005. Before that, he qualified as a chartered accountant at PWC. Up until 2023, Nick operated alone, placing hundreds of senior finance professionals, principally into media and technology. Over time, he has built an enviable reputation across the space and it's a real challenge to find someone in the field who isn't connected to him. Nick also advises businesses on finances leadership and board composition.",
   },
   {
     id: "sophie",
@@ -72,94 +72,6 @@ function EmailIcon() {
   );
 }
 
-function ToggleIcon({ open }: { open: boolean }) {
-  return (
-    <img
-      src="/assets/connector-cross.svg"
-      alt=""
-      aria-hidden="true"
-      style={{
-        width: 20,
-        height: 22,
-        display: "block",
-        transform: open ? "rotate(45deg)" : "rotate(0deg)",
-        transition: `transform ${T}ms ease`,
-        flexShrink: 0,
-        transformOrigin: "center center",
-      }}
-    />
-  );
-}
-
-/* ── Vertical Divider with T-Connectors ────────────────────────── */
-
-function VerticalDivider({
-  opacity = 1,
-  hideConnectors = false,
-}: {
-  opacity?: number;
-  hideConnectors?: boolean;
-}) {
-  return (
-    <div
-      className="relative flex-shrink-0"
-      style={{
-        width: 1.5,
-        opacity,
-        transition: `opacity ${T}ms ease`,
-        zIndex: 2,
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 20,
-          bottom: 20,
-          width: "100%",
-          backgroundColor: "#E9E9E9",
-        }}
-      />
-      {/* Mask strips — 40px wide (10px gap + 20px arm + 10px gap) to match TrackRecord breathing room */}
-      <div style={{ position: "absolute", top: 0,    left: -20, width: 40, minWidth: 40, height: 1.5, backgroundColor: "var(--color-page)", zIndex: 2 }} />
-      <div style={{ position: "absolute", bottom: 0, left: -20, width: 40, minWidth: 40, height: 1.5, backgroundColor: "var(--color-page)", zIndex: 2 }} />
-      {/* T-connector images sit on top of the mask strips */}
-      <img
-        src="/assets/connector-t-down.svg"
-        alt=""
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: -10,
-          width: 20,
-          minWidth: 20,
-          height: 12,
-          pointerEvents: "none",
-          zIndex: 3,
-          opacity: hideConnectors ? 0 : 1,
-          transition: `opacity ${T}ms ease`,
-        }}
-      />
-      <img
-        src="/assets/connector-t-up.svg"
-        alt=""
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: -10,
-          width: 20,
-          minWidth: 20,
-          height: 12,
-          pointerEvents: "none",
-          zIndex: 3,
-          opacity: hideConnectors ? 0 : 1,
-          transition: `opacity ${T}ms ease`,
-        }}
-      />
-    </div>
-  );
-}
 
 /* ── Person Card (desktop) ─────────────────────────────────────── */
 
@@ -359,9 +271,6 @@ function MobilePersonRow({
             </a>
           </div>
         </div>
-        <div style={{ color: "#575757", paddingRight: 4 }}>
-          <ToggleIcon open={isOpen} />
-        </div>
       </div>
 
       {/* Bio — expands below on tap */}
@@ -433,8 +342,8 @@ export default function OurPeople() {
   // 190px cards below full desktop, 220px at full desktop (≥1350px)
   const cardW      = windowW >= 1350 ? CARD_W : 190;
   const fixedW     = isHovering
-    ? 3 * cardW + 2 * 1.5 + 4 * 20
-    : 3 * cardW + 3 * 1.5 + 5 * 20;
+    ? 3 * cardW + 4 * 20
+    : 3 * cardW + 5 * 20;
   const bioW       = Math.max(220, containerW - fixedW);
 
   useEffect(() => {
@@ -474,13 +383,11 @@ export default function OurPeople() {
         {isMobile ? (
           /* ── Mobile: vertical stack ──────────────────────────── */
           <div style={{ position: "relative", backgroundColor: "var(--color-page)" }}>
-            <div style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
             <div style={{ paddingTop: 20, paddingBottom: 20 }}>
               <p className="type-body" style={{ margin: 0 }}>
                 {DEFAULT_BIO}
               </p>
             </div>
-            <div style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
             <div>
               {team.map((member, index) => (
                 <div key={member.id}>
@@ -489,13 +396,9 @@ export default function OurPeople() {
                     isOpen={tapped === member.id}
                     onToggle={() => setTapped(tapped === member.id ? null : member.id)}
                   />
-                  {index < team.length - 1 && (
-                    <div style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
-                  )}
                 </div>
               ))}
             </div>
-            <div style={{ height: 1.5, backgroundColor: "#E9E9E9" }} />
           </div>
         ) : (
           /* ── Desktop: horizontal hover layout ────────────────── */
@@ -504,42 +407,11 @@ export default function OurPeople() {
             className="relative"
             style={{ display: "flex", backgroundColor: "var(--color-page)" }}
           >
-            {/* Top horizontal line */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 1.5,
-                backgroundColor: "#E9E9E9",
-                pointerEvents: "none",
-                zIndex: 1,
-              }}
-            />
-            {/* Bottom horizontal line */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 1.5,
-                backgroundColor: "#E9E9E9",
-                pointerEvents: "none",
-                zIndex: 1,
-              }}
-            />
-
-            {/* Person cards with dividers */}
+            {/* Person cards */}
             {team.map((member, i) => (
               <div key={member.id} style={{ display: "contents" }}>
                 {i > 0 && (
-                  <>
-                    <FixedSpacer width={20} />
-                    <VerticalDivider />
-                    <FixedSpacer width={20} />
-                  </>
+                  <FixedSpacer width={20} />
                 )}
                 <PersonCard
                   member={member}
@@ -552,7 +424,7 @@ export default function OurPeople() {
               </div>
             ))}
 
-            {/* Divider + default bio wrapped together so they collapse as one flex item */}
+            {/* Default bio panel — collapses when someone is hovered */}
             <FixedSpacer width={isHovering ? 0 : 20} />
             <div
               style={{
@@ -560,12 +432,10 @@ export default function OurPeople() {
                 alignItems: "stretch",
                 overflow: "visible",
                 flexShrink: 0,
-                width: isHovering ? 0 : 1.5 + bioW,
+                width: isHovering ? 0 : bioW,
                 transition: `width ${T}ms ease-in-out`,
               }}
             >
-              {/* Divider */}
-              <VerticalDivider opacity={isHovering ? 0 : 1} hideConnectors={isHovering} />
               {/* Default bio text */}
               <div style={{ width: bioW, paddingTop: 25, paddingBottom: 30, paddingLeft: 20, flexShrink: 0 }}>
                 <p

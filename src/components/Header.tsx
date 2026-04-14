@@ -37,7 +37,7 @@ function buildTextMask(width: number, height: number, text: string, fontSize: nu
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 }
 
-function HeaderCtaText({ clipPct, measureRef, mobile }: { clipPct: number; measureRef: React.RefObject<HTMLSpanElement | null>; mobile: boolean }) {
+function HeaderCtaText({ clipPct, measureRef, mobile, showGradient = true }: { clipPct: number; measureRef: React.RefObject<HTMLSpanElement | null>; mobile: boolean; showGradient?: boolean }) {
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [maskImage, setMaskImage] = useState<string | null>(null);
   const fontSize = mobile ? 13 : 16;
@@ -87,31 +87,33 @@ function HeaderCtaText({ clipPct, measureRef, mobile }: { clipPct: number; measu
 
       {size.width > 0 && size.height > 0 && maskImage ? (
         <>
-          <span
-            aria-hidden="true"
-            className="absolute inset-0 overflow-hidden"
-            style={{
-              width: size.width,
-              height: size.height,
-              WebkitMaskImage: maskImage,
-              WebkitMaskSize: "100% 100%",
-              WebkitMaskRepeat: "no-repeat",
-              WebkitMaskPosition: "left top",
-              maskImage,
-              maskSize: "100% 100%",
-              maskRepeat: "no-repeat",
-              maskPosition: "left top",
-            }}
-          >
-            <GradientMirror className="h-full w-full" />
-          </span>
+          {showGradient ? (
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 overflow-hidden"
+              style={{
+                width: size.width,
+                height: size.height,
+                WebkitMaskImage: maskImage,
+                WebkitMaskSize: "100% 100%",
+                WebkitMaskRepeat: "no-repeat",
+                WebkitMaskPosition: "left top",
+                maskImage,
+                maskSize: "100% 100%",
+                maskRepeat: "no-repeat",
+                maskPosition: "left top",
+              }}
+            >
+              <GradientMirror className="h-full w-full" />
+            </span>
+          ) : null}
 
           <span
             aria-hidden="true"
             className="absolute left-0 top-0 whitespace-nowrap"
             style={{
               color: "rgba(255,255,255,0.92)",
-              clipPath: `inset(0 0 ${clipPct}% 0)`,
+              clipPath: showGradient ? `inset(0 0 ${clipPct}% 0)` : `inset(${clipPct}% 0 0 0)`,
               transform: `translate(${padX}px, ${CTA_MASK_PAD_Y}px)`,
             }}
           >
@@ -130,6 +132,7 @@ export default function Header() {
   const [ctaClipPct, setCtaClipPct] = useState(0);
   const [layoutW, setLayoutW] = useState(() => window.outerWidth || document.documentElement.clientWidth || window.innerWidth);
   const isContactPage = window.location.pathname === "/get-in-touch";
+  const isHomePage = window.location.pathname === "/";
 
   useEffect(() => {
     const updateLayoutW = () => setLayoutW(window.outerWidth || document.documentElement.clientWidth || window.innerWidth);
@@ -207,7 +210,7 @@ export default function Header() {
         </a>
 
         <a href={isContactPage ? "#contact-page-main" : "/get-in-touch"} style={{ textDecoration: "none", flexShrink: 0 }}>
-          <HeaderCtaText clipPct={ctaClipPct} measureRef={ctaRef} mobile={layoutW < 900} />
+          <HeaderCtaText clipPct={ctaClipPct} measureRef={ctaRef} mobile={layoutW < 900} showGradient={!isHomePage} />
         </a>
       </div>
     </header>

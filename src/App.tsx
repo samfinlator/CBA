@@ -15,7 +15,6 @@ import Footer from './components/Footer'
 
 function App() {
   const mainContentRef = useRef<HTMLDivElement>(null)
-  const [lineRange, setLineRange] = useState<{ top: number; bottom: number } | null>(null)
   const [viewportW, setViewportW] = useState(() => window.outerWidth || document.documentElement.clientWidth || window.innerWidth)
 
   useEffect(() => {
@@ -32,40 +31,6 @@ function App() {
     }
   }, [])
 
-  useEffect(() => {
-    const updateLineRange = () => {
-      const main = mainContentRef.current
-      const aboutDivider = document.getElementById('about-center-divider')
-      const ctaBox = document.getElementById('contact-cta-box')
-      if (!main || !aboutDivider || !ctaBox) return
-
-      const mainRect = main.getBoundingClientRect()
-      const aboutRect = aboutDivider.getBoundingClientRect()
-      const ctaRect = ctaBox.getBoundingClientRect()
-
-      setLineRange({
-        top: aboutRect.top - mainRect.top,
-        bottom: mainRect.bottom - ctaRect.top,
-      })
-    }
-
-    const main = mainContentRef.current
-    const aboutDivider = document.getElementById('about-center-divider')
-    const ctaBox = document.getElementById('contact-cta-box')
-    const ro = new ResizeObserver(() => updateLineRange())
-
-    if (main) ro.observe(main)
-    if (aboutDivider) ro.observe(aboutDivider)
-    if (ctaBox) ro.observe(ctaBox)
-
-    updateLineRange()
-    window.addEventListener('resize', updateLineRange)
-
-    return () => {
-      ro.disconnect()
-      window.removeEventListener('resize', updateLineRange)
-    }
-  }, [])
 
   return (
     <>
@@ -115,13 +80,6 @@ function App() {
 
       {/* Main content — flex column with section gaps */}
       <div ref={mainContentRef} className="relative flex flex-col gap-[80px] bg-page">
-        {lineRange && (
-          <div
-            className="pointer-events-none absolute"
-            style={{ top: lineRange.top, bottom: lineRange.bottom, left: "50%", width: 1.5, backgroundColor: "#E9E9E9", zIndex: 0, transform: "translateX(-0.75px)" }}
-          />
-        )}
-
         <div className="relative z-10 w-full max-w-[1512px] mx-auto">
           <About />
         </div>

@@ -82,22 +82,6 @@ const quotes: Quote[] = [
   },
 ];
 
-/* ── Connector Frame ──────────────────────────────────────────── */
-function ConnectorFrame() {
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      <img src="/assets/left-connector-down.svg"  alt="" className="absolute" style={{ top: 0,    left: 0,   width: 11, height: 12 }} />
-      <img src="/assets/right-connector-down.svg" alt="" className="absolute" style={{ top: 0,    right: 0,  width: 12, height: 12 }} />
-      <img src="/assets/left-connector-up.svg"    alt="" className="absolute" style={{ bottom: 0, left: 0,   width: 11, height: 12 }} />
-      <img src="/assets/right-connector-up.svg"   alt="" className="absolute" style={{ bottom: 0, right: 0,  width: 11, height: 12 }} />
-      <div className="absolute" style={{ top: 0,    left: 21, right: 21, height: "1.5px", backgroundColor: "#E9E9E9" }} />
-      <div className="absolute" style={{ bottom: 0, left: 21, right: 21, height: "1.5px", backgroundColor: "#E9E9E9" }} />
-      <div className="absolute" style={{ left: 0,  top: 22, bottom: 22, width: "1.5px",  backgroundColor: "#E9E9E9" }} />
-      <div className="absolute" style={{ right: 0, top: 22, bottom: 22, width: "1.5px",  backgroundColor: "#E9E9E9" }} />
-    </div>
-  );
-}
-
 /* ── Responsive layout constants derived from container width ─── */
 function getLayout(containerWidth: number) {
   const isSmall = containerWidth < 640;
@@ -290,7 +274,6 @@ export default function FeaturedQuotes() {
                     padding,
                   }}
                 >
-                  <ConnectorFrame />
                   <p
                     className="type-ui font-body text-center"
                     style={{ color: "#575757", marginBottom: "16px", lineHeight: 1 }}

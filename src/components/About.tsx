@@ -38,11 +38,14 @@ export default function About() {
               <div className="pb-8">
                 <div className="flex flex-col gap-[25px]">
                   <p className="type-body-lg">
-                    Campbell Brown is the leading recruiter in its field. We specialise
-                    in senior financial, strategic, operational and &ldquo;non&rdquo;
-                    executive appointments. Our principal expertise is within TV,
-                    publishing and marketing services, with an increasing focus on the
-                    technology and tech-enabled / branded consumer sectors.
+                    Campbell Brown is a leading recruiter in its field. We specialise
+                    in senior financial, strategic, operational and non executive
+                    appointments. Our principal expertise is within TV, publishing
+                    and marketing services, with an increasing focus on the
+                    technology and tech-enabled and branded consumer sectors.
+                  </p>
+                  <p className="type-body-lg">
+                    We increasingly help clients build out Chair and NED benches.
                   </p>
                   <p className="type-body-lg">
                     Our footprint spans the org chart, from CFO to Financial
@@ -53,58 +56,17 @@ export default function About() {
               </div>
             </div>
 
-            <div
-              className="pointer-events-none absolute"
-              style={{ bottom: 0, left: 0, right: "calc(50% + 10px)", height: 1.5, backgroundColor: "#E9E9E9" }}
-            />
-            <div
-              className="pointer-events-none absolute"
-              style={{ bottom: 0, left: "calc(50% + 10px)", right: 0, height: 1.5, backgroundColor: "#E9E9E9" }}
-            />
-            <div
-              id="about-center-divider"
-              className="pointer-events-none absolute"
-              style={{ top: "calc(100% + 10px)", left: "50%", width: 0, height: 0 }}
-            />
-            <img
-              src="/assets/connector-t-down.svg"
-              alt=""
-              className="pointer-events-none absolute"
-              style={{ bottom: -10, left: "50%", width: 20, height: 12, transform: "translateX(-9px)" }}
-            />
           </div>
         ) : (
           <div className="relative flex">
-            <div
-              className="pointer-events-none absolute"
-              style={{ top: 0, left: 20, right: "calc(50% + 10px)", height: 1.5, backgroundColor: "#E9E9E9" }}
-            />
-            <div
-              className="pointer-events-none absolute"
-              style={{ top: 0, left: "calc(50% + 10px)", right: 20, height: 1.5, backgroundColor: "#E9E9E9" }}
-            />
-
-            <div
-              id="about-center-divider"
-              className="pointer-events-none absolute"
-              style={{ top: 20, bottom: 0, left: "50%", width: 1.5, backgroundColor: "#E9E9E9" }}
-            />
-
-            <img
-              src="/assets/connector-t-down.svg"
-              alt=""
-              className="pointer-events-none absolute"
-              style={{ top: 0, left: "50%", width: 20, height: 12, transform: "translateX(-10px)" }}
-            />
-
             <div className="w-1/2 px-8 py-8">
               <div className="flex flex-col gap-[25px]">
                 <p className="type-body-lg">
-                  Campbell Brown is the leading recruiter in its field. We specialise
-                  in senior financial, strategic, operational and &ldquo;non&rdquo;
-                  executive appointments. Our principal expertise is within TV,
-                  publishing and marketing services, with an increasing focus on the
-                  technology and tech-enabled / branded consumer sectors.
+                  Campbell Brown is a leading recruiter in its field. We specialise
+                  in senior financial, strategic, operational and non executive
+                  appointments. Our principal expertise is within TV, publishing
+                  and marketing services, with an increasing focus on the
+                  technology and tech-enabled and branded consumer sectors.
                 </p>
                 <p className="type-body-lg">
                   Our footprint spans the org chart, from CFO to Financial

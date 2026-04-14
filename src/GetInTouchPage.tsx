@@ -28,21 +28,6 @@ const contacts = [
   },
 ];
 
-function ConnectorFrame() {
-  return (
-    <div className="pointer-events-none absolute inset-0">
-      <img src="/assets/left-connector-down.svg" alt="" className="absolute" style={{ top: 0, left: 0, width: 11, height: 12 }} />
-      <img src="/assets/right-connector-down.svg" alt="" className="absolute" style={{ top: 0, right: 0, width: 12, height: 12 }} />
-      <img src="/assets/left-connector-up.svg" alt="" className="absolute" style={{ bottom: 0, left: 0, width: 11, height: 12 }} />
-      <img src="/assets/right-connector-up.svg" alt="" className="absolute" style={{ bottom: 0, right: 0, width: 11, height: 12 }} />
-      <div className="absolute" style={{ top: 0, left: 21, right: 21, height: 1.5, backgroundColor: "#E9E9E9" }} />
-      <div className="absolute" style={{ bottom: 0, left: 21, right: 21, height: 1.5, backgroundColor: "#E9E9E9" }} />
-      <div className="absolute" style={{ left: 0, top: 22, bottom: 22, width: 1.5, backgroundColor: "#E9E9E9" }} />
-      <div className="absolute" style={{ right: 0, top: 22, bottom: 22, width: 1.5, backgroundColor: "#E9E9E9" }} />
-    </div>
-  );
-}
-
 function LinkedInIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -75,7 +60,6 @@ function ContactCard({
 }) {
   return (
     <div className="relative bg-[#F7F7F7]" style={{ paddingBlock: "20px", paddingInline: "18px" }}>
-      <ConnectorFrame />
       <div className="relative z-10 flex flex-col gap-5">
         <div className="flex items-start gap-4">
           <img src={photo} alt={name} style={{ width: 116, height: 116, objectFit: "cover", flexShrink: 0 }} />
@@ -117,6 +101,7 @@ export default function GetInTouchPage() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    phone: "",
     company: "",
     message: "",
   });
@@ -156,6 +141,7 @@ export default function GetInTouchPage() {
         body: JSON.stringify({
           name: form.name,
           email: form.email,
+          phone: form.phone,
           company: form.company,
           message: form.message,
         }),
@@ -163,7 +149,7 @@ export default function GetInTouchPage() {
 
       if (!response.ok) throw new Error("Formspree request failed");
 
-      setForm({ name: "", email: "", company: "", message: "" });
+      setForm({ name: "", email: "", phone: "", company: "", message: "" });
       setSubmitState("success");
     } catch {
       setSubmitState("error");
@@ -225,12 +211,11 @@ export default function GetInTouchPage() {
             <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
               <div className="flex flex-col gap-5">
                 <p className="type-body-lg" style={{ margin: 0 }}>
-                  Tell us whether you are hiring or exploring your next move, along with any timing or market context that matters. Keep it simple. We will take it from there.
+                  Please write to let us know whether you’re thinking of looking for a new role, hiring for your team or just want our advice. You can also contact Sophie, Nick or Kirsten directly, using the email links below.
                 </p>
               </div>
 
               <div className="relative bg-[#F7F7F7]" style={{ padding: viewportW < 900 ? "28px 20px 32px" : "32px 28px 36px" }}>
-                <ConnectorFrame />
                 <form className="relative z-10 flex flex-col gap-5" onSubmit={handleSubmit}>
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="flex flex-col gap-2">
@@ -258,8 +243,32 @@ export default function GetInTouchPage() {
                     </label>
                   </div>
 
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <label className="flex flex-col gap-2">
+                      <span className="type-card-role" style={{ margin: 0 }}>Phone Number</span>
+                      <input
+                        name="phone"
+                        value={form.phone}
+                        onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
+                        className="font-body"
+                        style={{ height: 48, border: "1.5px solid #E9E9E9", backgroundColor: "var(--color-page)", padding: "0 14px", fontSize: 16, outline: "none" }}
+                      />
+                    </label>
+
+                    <label className="flex flex-col gap-2">
+                      <span className="type-card-role" style={{ margin: 0 }}>Company</span>
+                      <input
+                        name="company"
+                        value={form.company}
+                        onChange={(e) => setForm((prev) => ({ ...prev, company: e.target.value }))}
+                        className="font-body"
+                        style={{ height: 48, border: "1.5px solid #E9E9E9", backgroundColor: "var(--color-page)", padding: "0 14px", fontSize: 16, outline: "none" }}
+                      />
+                    </label>
+                  </div>
+
                   <label className="flex flex-col gap-2">
-                    <span className="type-card-role" style={{ margin: 0 }}>Company</span>
+                    <span className="type-card-role" style={{ margin: 0 }}>Message</span>
                     <input
                       name="company"
                       value={form.company}
@@ -270,7 +279,7 @@ export default function GetInTouchPage() {
                   </label>
 
                   <label className="flex flex-col gap-2">
-                    <span className="type-card-role" style={{ margin: 0 }}>Brief</span>
+                    <span className="type-card-role" style={{ margin: 0 }}>Message</span>
                     <textarea
                       name="message"
                       value={form.message}
@@ -304,7 +313,7 @@ export default function GetInTouchPage() {
                         <GradientCanvas className="h-full w-full" seed={GRADIENT_SEED} startTime={GRADIENT_START_TIME} />
                       </span>
                       <span className="relative z-10">
-                        {submitState === "submitting" ? "Sending..." : "Send Brief"}
+                        {submitState === "submitting" ? "Sending..." : "Brief"}
                       </span>
                     </button>
                   </div>
