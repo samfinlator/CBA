@@ -120,10 +120,20 @@ export default function LogoTicker() {
     waitForImages();
     window.addEventListener("resize", handleResize);
 
+    // Restart ticker when tab becomes visible again (RAF pauses in background tabs)
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible" && !cancelled && !PREFERS_REDUCED_MOTION) {
+        lastTRef.current = undefined; // reset dt so we don't get a huge jump
+        if (rafRef.current === undefined) start();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
       cancelled = true;
       stop();
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 

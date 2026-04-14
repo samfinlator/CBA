@@ -1,5 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IS_MOBILE, PREFERS_REDUCED_MOTION } from "../utils/deviceCapability";
+
+const CSS_GRADIENT = "linear-gradient(135deg, #ff0cf0 0%, #ffb103 50%, #00b5fc 100%)";
 
 /**
  * Animated WebGL gradient background.
@@ -31,19 +33,27 @@ export default function GradientCanvas({
   startTime?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [webglFailed, setWebglFailed] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl = canvas.getContext("webgl", {
+    const ctxOpts = {
       alpha: false,
       antialias: false,
       // preserveDrawingBuffer is needed when other canvases read from this one
       // via drawImage(). Without it the backbuffer may be cleared after compositing.
       preserveDrawingBuffer: fixed,
-    });
-    if (!gl) return;
+    };
+    // Try WebGL2 first (better ANGLE/Windows compatibility), fall back to WebGL1
+    const gl =
+      (canvas.getContext("webgl2", ctxOpts) as WebGLRenderingContext | null) ??
+      canvas.getContext("webgl", ctxOpts);
+    if (!gl) {
+      setWebglFailed(true);
+      return;
+    }
 
     let rafId: number | null = null;
     let destroyed = false;
@@ -53,6 +63,18 @@ export default function GradientCanvas({
       if (rafId !== null) cancelAnimationFrame(rafId);
       rafId = null;
     };
+
+    // Handle GPU context loss/restore
+    const handleContextLost = (e: Event) => {
+      e.preventDefault(); // signal browser we want a restore
+      stop(); // pause RAF but don't set destroyed — allow restart
+    };
+    const handleContextRestored = () => {
+      // Re-initialize shaders/buffers (GPU state is gone after context loss)
+      init().then((fn) => { cleanupExtra = fn; });
+    };
+    canvas.addEventListener("webglcontextlost", handleContextLost);
+    canvas.addEventListener("webglcontextrestored", handleContextRestored);
 
     const init = async () => {
       const [vertSrc, fragSrc] = await Promise.all([
@@ -64,11 +86,12 @@ export default function GradientCanvas({
 
       // ── helpers ──
       const compile = (type: number, src: string) => {
-        const s = gl.createShader(type)!;
+        const s = gl.createShader(type);
+        if (!s) return null;
         gl.shaderSource(s, src);
         gl.compileShader(s);
         if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-          console.error(gl.getShaderInfoLog(s));
+          console.error("Shader compile error:", gl.getShaderInfoLog(s));
           gl.deleteShader(s);
           return null;
         }
@@ -77,14 +100,16 @@ export default function GradientCanvas({
 
       const vs = compile(gl.VERTEX_SHADER, vertSrc);
       const fs = compile(gl.FRAGMENT_SHADER, fragSrc);
-      if (!vs || !fs) return;
+      if (!vs || !fs) { setWebglFailed(true); return; }
 
-      const prog = gl.createProgram()!;
+      const prog = gl.createProgram();
+      if (!prog) { setWebglFailed(true); return; }
       gl.attachShader(prog, vs);
       gl.attachShader(prog, fs);
       gl.linkProgram(prog);
       if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-        console.error(gl.getProgramInfoLog(prog));
+        console.error("Program link error:", gl.getProgramInfoLog(prog));
+        setWebglFailed(true);
         return;
       }
 
@@ -167,7 +192,14 @@ export default function GradientCanvas({
       let renderedOnce = false;
 
       const render = (now: number) => {
-        if (destroyed || gl.isContextLost()) return;
+        if (destroyed) return;
+
+        // If context was lost, don't render but keep the loop alive
+        // so it can resume when the context is restored
+        if (gl.isContextLost()) {
+          rafId = requestAnimationFrame(render);
+          return;
+        }
 
         // Schedule next frame first
         rafId = requestAnimationFrame(render);
@@ -220,9 +252,20 @@ export default function GradientCanvas({
         observer.observe(canvas);
       }
 
+      // ── Restart render loop when tab becomes visible again ──
+      // Browsers pause RAF for backgrounded tabs. When the user returns,
+      // the loop may be dead. This kicks it back to life.
+      const handleVisibility = () => {
+        if (document.visibilityState === "visible" && !destroyed && rafId === null) {
+          rafId = requestAnimationFrame(render);
+        }
+      };
+      document.addEventListener("visibilitychange", handleVisibility);
+
       // ── cleanup ──
       return () => {
         window.removeEventListener("resize", resize);
+        document.removeEventListener("visibilitychange", handleVisibility);
         if (!fixed) {
           window.removeEventListener("scroll", updateCachedRect);
           window.removeEventListener("resize", updateCachedRect);
@@ -238,15 +281,32 @@ export default function GradientCanvas({
       destroyed = true;
       stop();
       cleanupExtra?.();
+      canvas.removeEventListener("webglcontextlost", handleContextLost);
+      canvas.removeEventListener("webglcontextrestored", handleContextRestored);
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      id={fixed ? "gradient-source" : undefined}
-      className={className}
-      style={{ display: "block", width: "100%", height: "100%" }}
-    />
+    <>
+      {webglFailed && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: CSS_GRADIENT,
+          }}
+        />
+      )}
+      <canvas
+        ref={canvasRef}
+        id={fixed ? "gradient-source" : undefined}
+        className={className}
+        style={{
+          display: webglFailed ? "none" : "block",
+          width: "100%",
+          height: "100%",
+        }}
+      />
+    </>
   );
 }

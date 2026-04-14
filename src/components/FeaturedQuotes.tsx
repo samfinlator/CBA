@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { subscribe } from "../utils/gradientSampler";
 
 interface Quote {
   attribution: string;
@@ -13,14 +12,20 @@ const GradientPhrase = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    return subscribe((url) => {
+
+    let raf = 0;
+    const update = () => {
       const rect = el.getBoundingClientRect();
       const viewportW = document.documentElement.clientWidth || window.innerWidth || 1;
       const viewportH = document.documentElement.clientHeight || window.innerHeight || 1;
-      el.style.backgroundImage = `url(${url})`;
+      el.style.backgroundImage = "linear-gradient(90deg, #ff0cf0, #ffb103, #00b5fc)";
       el.style.backgroundSize = `${viewportW}px ${viewportH}px`;
       el.style.backgroundPosition = `${-rect.left}px ${-rect.top}px`;
-    });
+      raf = requestAnimationFrame(update);
+    };
+
+    raf = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (
@@ -31,6 +36,10 @@ const GradientPhrase = ({ children }: { children: React.ReactNode }) => {
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
+        WebkitBoxDecorationBreak: "clone",
+        boxDecorationBreak: "clone",
+        paddingRight: "0.04em",
+        marginRight: "-0.04em",
       }}
     >
       {children}
@@ -44,7 +53,10 @@ const quotes: Quote[] = [
     text: (
       <>
         &ldquo;CAMPBELL BROWN HAS BEEN{" "}
-        <GradientPhrase>NOTHING SHORT OF EXCELLENT</GradientPhrase>{" "}
+        <GradientPhrase>NOTHING</GradientPhrase>{" "}
+        <GradientPhrase>SHORT</GradientPhrase>{" "}
+        <GradientPhrase>OF</GradientPhrase>{" "}
+        <GradientPhrase>EXCELLENT</GradientPhrase>{" "}
         — RESPONSIVE, TIMELY AND FUN.&rdquo;
       </>
     ),
@@ -63,8 +75,9 @@ const quotes: Quote[] = [
     attribution: "David Graham — CFO, The & Partnership",
     text: (
       <>
-        &ldquo;THEIR INTUITION OF KNOWING A CANDIDATE IS RIGHT FOR THE ROLE IS
-        <GradientPhrase> TRULY EXCEPTIONAL</GradientPhrase>&rdquo;
+        &ldquo;THEIR INTUITION OF KNOWING A CANDIDATE IS RIGHT FOR THE ROLE IS{" "}
+        <GradientPhrase>TRULY</GradientPhrase>{" "}
+        <GradientPhrase>EXCEPTIONAL</GradientPhrase>&rdquo;
       </>
     ),
   },

@@ -1,6 +1,10 @@
 // gradient.frag
 
-precision highp float;
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+  precision highp float;
+#else
+  precision mediump float;
+#endif
 
 uniform float uTime;
 uniform float uScrollProgress;
@@ -112,8 +116,8 @@ void main() {
 
   // Distort the uv coordinates with noise iterations
   for (int i = 0; i < 6; i++) {
-    if (float(i) >= uUvDistortionIterations) break;
-    uv += noise(vec3(uv - float(i) * 0.2, uTime + float(i) * 32.0)) * uUvDistortionIntensity;
+    float weight = step(float(i) + 0.5, uUvDistortionIterations);
+    uv += weight * noise(vec3(uv - float(i) * 0.2, uTime + float(i) * 32.0)) * uUvDistortionIntensity;
   }
 
   float colourInput = noise(vec3(uv, sin(uTime) + uSeed)) * 0.5 + 0.5;

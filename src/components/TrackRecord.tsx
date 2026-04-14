@@ -251,7 +251,19 @@ function TickerRow({
     }
 
     rafRef.current = requestAnimationFrame(tick);
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+
+    // Reset dt after tab returns to avoid a huge position jump
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        lastTRef.current = undefined;
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

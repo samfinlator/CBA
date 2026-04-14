@@ -1,5 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IS_MOBILE, PREFERS_REDUCED_MOTION } from "../utils/deviceCapability";
+
+const CSS_GRADIENT = "linear-gradient(135deg, #ff0cf0 0%, #ffb103 50%, #00b5fc 100%)";
 
 /**
  * Lightweight mirror of the main WebGL gradient canvas.
@@ -17,6 +19,7 @@ import { IS_MOBILE, PREFERS_REDUCED_MOTION } from "../utils/deviceCapability";
  */
 export default function GradientMirror({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [fallback, setFallback] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -63,6 +66,7 @@ export default function GradientMirror({ className = "" }: { className?: string 
     const targetInterval = IS_MOBILE ? 1000 / 30 : 0;
     let lastFrameTime = 0;
     let renderedOnce = false;
+    let failCount = 0;
 
     const render = (now: number) => {
       if (destroyed) return;
@@ -76,7 +80,12 @@ export default function GradientMirror({ className = "" }: { className?: string 
       lastFrameTime = now;
 
       const source = getSource();
-      if (!source || source.width === 0 || source.height === 0) return;
+      if (!source || source.width === 0 || source.height === 0) {
+        // If source never produces a frame, fall back to CSS gradient
+        if (++failCount > 60) setFallback(true);
+        return;
+      }
+      failCount = 0;
 
       // Map this canvas's viewport position to source canvas pixel coords
       const vpW = window.innerWidth;
@@ -106,10 +115,19 @@ export default function GradientMirror({ className = "" }: { className?: string 
     );
     observer.observe(canvas);
 
+    // ── Restart when tab becomes visible again ──
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible" && !destroyed && rafId === null) {
+        rafId = requestAnimationFrame(render);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
       destroyed = true;
       stop();
       observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("scroll", updateRect);
       window.removeEventListener("resize", updateRect);
       window.removeEventListener("resize", resize);
@@ -117,10 +135,25 @@ export default function GradientMirror({ className = "" }: { className?: string 
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className={className}
-      style={{ display: "block", width: "100%", height: "100%" }}
-    />
+    <>
+      {fallback && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: CSS_GRADIENT,
+          }}
+        />
+      )}
+      <canvas
+        ref={canvasRef}
+        className={className}
+        style={{
+          display: fallback ? "none" : "block",
+          width: "100%",
+          height: "100%",
+        }}
+      />
+    </>
   );
 }
