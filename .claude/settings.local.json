@@ -61,7 +61,10 @@
       "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH\")",
       "Bash(pdftoppm --version)",
       "Bash(export PATH=\"/usr/local/bin:$PATH\")",
-      "Bash(pdftotext \"/Users/samfinlator/Desktop/PageSpeed Insights.pdf\" -)"
+      "Bash(pdftotext \"/Users/samfinlator/Desktop/PageSpeed Insights.pdf\" -)",
+      "Bash(gh auth:*)",
+      "Read(//usr/local/bin/**)",
+      "Bash(git config:*)"
     ]
   }
 }
