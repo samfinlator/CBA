@@ -31,7 +31,7 @@ const team: TeamMember[] = [
     photo: "/assets/team-nick.webp",
     linkedin: "https://www.linkedin.com/in/nick-brown-6627244/",
     email: "nick@campbellbrown.co.uk",
-    bio: "Nick founded Campbell Brown Associates in 2010, following 13 years running the media practice at a leading London search firm. He was part of the management team that successfully exited in 2005. Before that, he qualified as a chartered accountant at PWC. Up until 2023, Nick operated alone, placing hundreds of senior finance professionals, principally into media and technology. Over time, he has built an enviable reputation across the space and it's a real challenge to find someone in the field who isn't connected to him. Nick also advises businesses on finances leadership and board composition.",
+    bio: "Nick founded Campbell Brown Associates in 2010, following 13 years running the media practice at a leading London search firm. He was part of the management team that successfully exited in 2005. Before that, he qualified as a chartered accountant at PWC. Up until 2023, Nick operated alone, placing hundreds of senior finance professionals, principally into media and technology. Over time, he has built an enviable reputation across the space and it's a real challenge to find someone in the field who isn't connected to him. Nick also advises businesses on finance leadership and board composition.",
   },
   {
     id: "sophie",

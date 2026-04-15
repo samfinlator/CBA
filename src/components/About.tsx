@@ -38,7 +38,7 @@ export default function About() {
               <div className="pb-8">
                 <div className="flex flex-col gap-[25px]">
                   <p className="type-body-lg">
-                    Campbell Brown is a leading recruiter in its field. We specialise
+                    Campbell Brown is a leading recruiter in its field, specialising
                     in senior financial, strategic, operational and non executive
                     appointments. Our principal expertise is within TV, publishing
                     and marketing services, with an increasing focus on the
@@ -62,7 +62,7 @@ export default function About() {
             <div className="w-1/2 px-8 py-8">
               <div className="flex flex-col gap-[25px]">
                 <p className="type-body-lg">
-                  Campbell Brown is a leading recruiter in its field. We specialise
+                  Campbell Brown is a leading recruiter in its field, specialising
                   in senior financial, strategic, operational and non executive
                   appointments. Our principal expertise is within TV, publishing
                   and marketing services, with an increasing focus on the

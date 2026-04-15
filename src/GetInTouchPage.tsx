@@ -269,17 +269,6 @@ export default function GetInTouchPage() {
 
                   <label className="flex flex-col gap-2">
                     <span className="type-card-role" style={{ margin: 0 }}>Message</span>
-                    <input
-                      name="company"
-                      value={form.company}
-                      onChange={(e) => setForm((prev) => ({ ...prev, company: e.target.value }))}
-                      className="font-body"
-                      style={{ height: 48, border: "1.5px solid #E9E9E9", backgroundColor: "var(--color-page)", padding: "0 14px", fontSize: 16, outline: "none" }}
-                    />
-                  </label>
-
-                  <label className="flex flex-col gap-2">
-                    <span className="type-card-role" style={{ margin: 0 }}>Message</span>
                     <textarea
                       name="message"
                       value={form.message}
@@ -313,7 +302,7 @@ export default function GetInTouchPage() {
                         <GradientCanvas className="h-full w-full" seed={GRADIENT_SEED} startTime={GRADIENT_START_TIME} />
                       </span>
                       <span className="relative z-10">
-                        {submitState === "submitting" ? "Sending..." : "Brief"}
+                        {submitState === "submitting" ? "Sending..." : "Send"}
                       </span>
                     </button>
                   </div>

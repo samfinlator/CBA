@@ -209,9 +209,11 @@ export default function Header() {
           </div>
         </a>
 
-        <a href={isContactPage ? "#contact-page-main" : "/get-in-touch"} style={{ textDecoration: "none", flexShrink: 0 }}>
-          <HeaderCtaText clipPct={ctaClipPct} measureRef={ctaRef} mobile={layoutW < 900} showGradient={!isHomePage} />
-        </a>
+        {!isContactPage ? (
+          <a href="/get-in-touch" style={{ textDecoration: "none", flexShrink: 0 }}>
+            <HeaderCtaText clipPct={ctaClipPct} measureRef={ctaRef} mobile={layoutW < 900} showGradient={!isHomePage} />
+          </a>
+        ) : <span />}
       </div>
     </header>
   );
