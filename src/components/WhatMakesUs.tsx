@@ -7,7 +7,7 @@ interface Value {
 const values: Value[] = [
   {
     label: "Empathy",
-    color: "#FFBA00",
+    color: "#0073FF",
     description:
       "We support every candidate with sensitivity and counsel, particularly those missing out on roles they set their hearts on.",
   },
