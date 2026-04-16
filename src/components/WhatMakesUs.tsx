@@ -7,13 +7,13 @@ interface Value {
 const values: Value[] = [
   {
     label: "Empathy",
-    color: "#0073FF",
+    color: "#FFBA00",
     description:
       "We support every candidate with sensitivity and counsel, particularly those missing out on roles they set their hearts on.",
   },
   {
     label: "Tenacity",
-    color: "#0073FF",
+    color: "#E53333",
     description:
       "We keep the process moving. Re-engaging candidates, managing dropouts and solving problems until the role is filled.",
   },
@@ -25,7 +25,7 @@ const values: Value[] = [
   },
   {
     label: "Integrity",
-    color: "#E53333",
+    color: "#0073FF",
     description:
       "Honest with clients, honest with candidates. We give it to you straight even when it's not what you want to hear.",
   },
