@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import GradientCanvas from "./components/GradientCanvas";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import CookieBanner from "./components/CookieBanner";
 import { GRADIENT_SEED, GRADIENT_START_TIME } from "./gradientConfig";
 
 const contacts = [
@@ -336,6 +337,7 @@ export default function GetInTouchPage() {
       </main>
 
       <Footer />
+      <CookieBanner />
     </>
   );
 }

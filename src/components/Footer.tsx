@@ -15,14 +15,11 @@ export default function Footer() {
         <div className="flex flex-col gap-6 px-0 py-2.5 md:flex-row md:items-center md:justify-between md:gap-7">
           {/* Legal links */}
           <div className="flex flex-col gap-2 md:flex-1 md:flex-row md:gap-8">
-            <a href="#" className="type-ui hover:underline" style={{ color: "white" }}>
-              Terms &amp; conditions
-            </a>
-            <a href="#" className="type-ui hover:underline" style={{ color: "white" }}>
+            <a href="/privacy-policy" className="type-ui hover:underline" style={{ color: "white" }}>
               Privacy policy
             </a>
-            <a href="#" className="type-ui hover:underline" style={{ color: "white" }}>
-              Equality policy
+            <a href="/cookies-policy" className="type-ui hover:underline" style={{ color: "white" }}>
+              Cookies policy
             </a>
           </div>
 

@@ -131,8 +131,10 @@ export default function Header() {
   const [logoClipPct, setLogoClipPct] = useState(0);
   const [ctaClipPct, setCtaClipPct] = useState(0);
   const [layoutW, setLayoutW] = useState(() => window.outerWidth || document.documentElement.clientWidth || window.innerWidth);
-  const isContactPage = window.location.pathname === "/get-in-touch";
-  const isHomePage = window.location.pathname === "/";
+  const pathname = window.location.pathname;
+  const isContactPage = pathname === "/get-in-touch";
+  const isPolicyPage = pathname === "/privacy-policy" || pathname === "/cookies-policy";
+  const isHomePage = pathname === "/";
 
   useEffect(() => {
     const updateLayoutW = () => setLayoutW(window.outerWidth || document.documentElement.clientWidth || window.innerWidth);
@@ -184,7 +186,7 @@ export default function Header() {
               style={{
                 background: "white",
                 ...MASK,
-                clipPath: `inset(0 0 ${logoClipPct}% 0)`,
+                clipPath: isPolicyPage ? "inset(100% 0 0 0)" : `inset(0 0 ${logoClipPct}% 0)`,
               }}
             />
           </div>
@@ -200,7 +202,7 @@ export default function Header() {
               fontWeight: 500,
               lineHeight: 1,
               color: "rgba(255,255,255,0.92)",
-              clipPath: `inset(0 0 ${logoClipPct}% 0)`,
+              clipPath: isPolicyPage ? "inset(100% 0 0 0)" : `inset(0 0 ${logoClipPct}% 0)`,
             }}
           >
             {LINES.map((line) => (
@@ -211,7 +213,7 @@ export default function Header() {
 
         {!isContactPage ? (
           <a href="/get-in-touch" style={{ textDecoration: "none", flexShrink: 0 }}>
-            <HeaderCtaText clipPct={ctaClipPct} measureRef={ctaRef} mobile={layoutW < 900} showGradient={!isHomePage} />
+            <HeaderCtaText clipPct={isPolicyPage ? 100 : ctaClipPct} measureRef={ctaRef} mobile={layoutW < 900} showGradient={!isHomePage} />
           </a>
         ) : <span />}
       </div>

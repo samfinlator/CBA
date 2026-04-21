@@ -12,6 +12,7 @@ import WhatMakesUs from './components/WhatMakesUs'
 import TheNumbers from './components/TheNumbers'
 import GetInTouch from './components/GetInTouch'
 import Footer from './components/Footer'
+import CookieBanner from './components/CookieBanner'
 
 function App() {
   const mainContentRef = useRef<HTMLDivElement>(null)
@@ -113,6 +114,7 @@ function App() {
 
       {/* Footer — full bleed */}
       <Footer />
+      <CookieBanner />
     </>
   )
 }
