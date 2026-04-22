@@ -42,12 +42,11 @@ export default function GetInTouch() {
             maxWidth: 1280,
             margin: "0 auto",
             backgroundColor: "#F7F7F7",
-            padding: "64px 48px 76px",
           }}
         >
           <div
             className="relative z-10 flex flex-col items-center text-center"
-            style={{ gap: 44 }}
+            style={{ gap: 20 }}
           >
             <h3
               className="font-heading uppercase text-dark"

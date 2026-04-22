@@ -80,7 +80,7 @@ function App() {
       </div>
 
       {/* Main content — flex column with section gaps */}
-      <div ref={mainContentRef} className="relative flex flex-col gap-[80px] bg-page">
+      <div ref={mainContentRef} className="relative flex flex-col gap-[60px] bg-page">
         <div className="relative z-10 w-full max-w-[1512px] mx-auto">
           <About />
         </div>

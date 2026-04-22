@@ -99,7 +99,7 @@ function ValueCard({
         style={{
           width: frameWidth,
           height: frameHeight,
-          padding: active ? "24px 24px 28px" : "24px 18px 22px",
+          padding: active ? "18px 14px 20px 24px" : "18px 14px 20px 24px",
           transition: "width 450ms ease, height 450ms ease, padding 450ms ease",
         }}
       >
@@ -294,21 +294,21 @@ export default function WhatMakesUs() {
   }, [containerW]);
 
   const desktopRowGap = 20;
-  const desktopCardsMinW = 945;
-  const desktopCardsMaxW = 960;
+  const desktopCardsMinW = 935;
+  const desktopCardsMaxW = 950;
   const cardsW = isDesktop
     ? Math.min(desktopCardsMaxW, Math.max(desktopCardsMinW, containerW - 211 - desktopRowGap))
     : containerW;
   const narrativeW = isDesktop ? Math.max(211, containerW - cardsW - desktopRowGap) : containerW;
   const gap = 20;
-  const cardH = isCompact ? 352 : 420;
+  const cardH = isCompact ? 304 : 344;
   const desktopInactiveW = Math.max(122, Math.min(154, Math.floor(cardsW * 0.142)));
   const desktopActiveW = Math.max(320, cardsW - 4 * desktopInactiveW - 4 * gap);
-  const compactActiveW = Math.min(layoutW * 0.8, 383);
+  const compactActiveW = Math.min(layoutW * 0.8, 373);
   const activeW = isCompact ? compactActiveW : desktopActiveW;
   const activeWNumber = isCompact ? compactActiveW : desktopActiveW;
   const inactiveFrameW = isCompact ? 154 : desktopInactiveW;
-  const collapsedFrameHeight = 352;
+  const collapsedFrameHeight = 304;
   const copyW = isCompact ? Math.max(220, activeWNumber - 74) : Math.max(240, activeWNumber - 56);
 
   return (
