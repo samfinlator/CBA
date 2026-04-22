@@ -13,7 +13,8 @@ const MASK: React.CSSProperties = {
 };
 
 const LINES = ["Campbell", "Brown", "Associates"];
-const CTA_LABEL = "Get In Touch";
+const GET_IN_TOUCH_LABEL = "Get In Touch";
+const HOME_LABEL = "Home";
 const CTA_FONT_WEIGHT = 700;
 const CTA_LINE_HEIGHT = 1;
 const CTA_MASK_PAD_Y = 1;
@@ -37,7 +38,19 @@ function buildTextMask(width: number, height: number, text: string, fontSize: nu
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 }
 
-function HeaderCtaText({ clipPct, measureRef, mobile, showGradient = true }: { clipPct: number; measureRef: React.RefObject<HTMLSpanElement | null>; mobile: boolean; showGradient?: boolean }) {
+function HeaderActionText({
+  clipPct,
+  label,
+  measureRef,
+  mobile,
+  showGradient = true,
+}: {
+  clipPct: number;
+  label: string;
+  measureRef: React.RefObject<HTMLSpanElement | null>;
+  mobile: boolean;
+  showGradient?: boolean;
+}) {
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [maskImage, setMaskImage] = useState<string | null>(null);
   const fontSize = mobile ? 13 : 16;
@@ -52,7 +65,7 @@ function HeaderCtaText({ clipPct, measureRef, mobile, showGradient = true }: { c
       const width = Math.ceil(rect.width) + padX * 3;
       const height = Math.ceil(rect.height) + CTA_MASK_PAD_Y * 2;
       setSize({ width, height });
-      setMaskImage(buildTextMask(width, height, CTA_LABEL, fontSize, padX));
+      setMaskImage(buildTextMask(width, height, label, fontSize, padX));
     };
 
     update();
@@ -63,7 +76,7 @@ function HeaderCtaText({ clipPct, measureRef, mobile, showGradient = true }: { c
       ro.disconnect();
       window.removeEventListener("resize", update);
     };
-  }, [fontSize, padX]);
+  }, [fontSize, label, padX]);
 
   return (
     <span
@@ -82,7 +95,7 @@ function HeaderCtaText({ clipPct, measureRef, mobile, showGradient = true }: { c
         className="invisible absolute left-0 top-0 whitespace-nowrap pointer-events-none"
         style={{ transform: `translate(${padX}px, ${CTA_MASK_PAD_Y}px)` }}
       >
-        {CTA_LABEL}
+        {label}
       </span>
 
       {size.width > 0 && size.height > 0 && maskImage ? (
@@ -117,7 +130,7 @@ function HeaderCtaText({ clipPct, measureRef, mobile, showGradient = true }: { c
               transform: `translate(${padX}px, ${CTA_MASK_PAD_Y}px)`,
             }}
           >
-            {CTA_LABEL}
+            {label}
           </span>
         </>
       ) : null}
@@ -127,7 +140,8 @@ function HeaderCtaText({ clipPct, measureRef, mobile, showGradient = true }: { c
 
 export default function Header() {
   const logoRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLSpanElement>(null);
+  const getInTouchRef = useRef<HTMLSpanElement>(null);
+  const homeRef = useRef<HTMLSpanElement>(null);
   const [logoClipPct, setLogoClipPct] = useState(0);
   const [ctaClipPct, setCtaClipPct] = useState(0);
   const [layoutW, setLayoutW] = useState(() => window.outerWidth || document.documentElement.clientWidth || window.innerWidth);
@@ -149,7 +163,7 @@ export default function Header() {
 
     const update = () => {
       const logoEl = logoRef.current;
-      const ctaEl = ctaRef.current;
+      const ctaEl = getInTouchRef.current ?? homeRef.current;
       const innerBounds = heroInner.getBoundingClientRect();
 
       if (logoEl) {
@@ -211,11 +225,34 @@ export default function Header() {
           </div>
         </a>
 
-        {!isContactPage ? (
-          <a href="/get-in-touch" style={{ textDecoration: "none", flexShrink: 0 }}>
-            <HeaderCtaText clipPct={isPolicyPage ? 100 : ctaClipPct} measureRef={ctaRef} mobile={layoutW < 900} showGradient={!isHomePage} />
-          </a>
-        ) : <span />}
+        <div
+          className="flex items-center"
+          style={{ gap: layoutW < 900 ? "16px" : "24px", flexShrink: 0 }}
+        >
+          {(isContactPage || isPolicyPage) ? (
+            <a href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
+              <HeaderActionText
+                clipPct={isPolicyPage ? 100 : ctaClipPct}
+                label={HOME_LABEL}
+                measureRef={homeRef}
+                mobile={layoutW < 900}
+                showGradient={isPolicyPage}
+              />
+            </a>
+          ) : null}
+
+          {!isContactPage ? (
+            <a href="/get-in-touch" style={{ textDecoration: "none", flexShrink: 0 }}>
+              <HeaderActionText
+                clipPct={isPolicyPage ? 100 : ctaClipPct}
+                label={GET_IN_TOUCH_LABEL}
+                measureRef={getInTouchRef}
+                mobile={layoutW < 900}
+                showGradient={!isHomePage}
+              />
+            </a>
+          ) : null}
+        </div>
       </div>
     </header>
   );
