@@ -320,7 +320,7 @@ export default function TrackRecord() {
         <h2 className="type-section-heading">What People Are Saying</h2>
       </div>
 
-      <div style={{ marginLeft: "-20px", marginRight: "-20px" }}>
+      <div style={{ marginLeft: "-40px", marginRight: "-40px" }}>
         <div className="testimonial-ticker flex flex-col" style={{ gap: 0, backgroundColor: "var(--color-page)", overflowX: "clip" }}>
         <TickerRow testimonials={row1} reverse={false} showBottomLine={false} />
         <TickerRow testimonials={row2} reverse={true}  showBottomLine={true}  />
