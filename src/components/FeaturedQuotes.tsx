@@ -5,6 +5,18 @@ interface Quote {
   text: React.ReactNode;
 }
 
+const FrameOverlay = () => (
+  <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+    <img src="/assets/left-connector-down.svg" alt="" style={{ position: "absolute", top: 0, left: 0, width: 11, height: 12 }} />
+    <img src="/assets/right-connector-down.svg" alt="" style={{ position: "absolute", top: 0, right: 0, width: 12, height: 12 }} />
+    <img src="/assets/left-connector-up.svg" alt="" style={{ position: "absolute", bottom: 0, left: 0, width: 11, height: 12 }} />
+    <img src="/assets/right-connector-up.svg" alt="" style={{ position: "absolute", bottom: 0, right: 0, width: 11, height: 12 }} />
+    <div style={{ position: "absolute", top: 0, left: 21, right: 21, height: 1.5, backgroundColor: "#E9E9E9" }} />
+    <div style={{ position: "absolute", bottom: 0, left: 21, right: 21, height: 1.5, backgroundColor: "#E9E9E9" }} />
+    <div style={{ position: "absolute", left: 0, top: 22, bottom: 22, width: 1.5, backgroundColor: "#E9E9E9" }} />
+    <div style={{ position: "absolute", right: 0, top: 22, bottom: 22, width: 1.5, backgroundColor: "#E9E9E9" }} />
+  </div>
+);
 
 const GradientPhrase = ({ children }: { children: React.ReactNode }) => {
   const ref = useRef<HTMLSpanElement>(null);
@@ -82,49 +94,42 @@ const quotes: Quote[] = [
   },
 ];
 
-/* ── Responsive layout constants derived from container width ─── */
 function getLayout(containerWidth: number) {
   const isSmall = containerWidth < 640;
-  const isMid   = containerWidth >= 640 && containerWidth < 1024;
+  const isMid = containerWidth >= 640 && containerWidth < 1024;
 
-  // Active card narrower than viewport so side cards always peek in
   const cardW = isSmall
-    ? Math.max(240, containerWidth - 80)          // ~295px at 375 → ~20px peek each side
+    ? Math.max(240, containerWidth - 80)
     : isMid
-    ? Math.round(containerWidth * 0.8)            // ~614px at 768 → ~35px peek each side
-    : Math.min(980, containerWidth - 160);        // desktop: 980px max
+      ? Math.round(containerWidth * 0.8)
+      : Math.min(980, containerWidth - 160);
 
-  const gap       = isSmall ? 20 : isMid ? 40 : 120;
+  const gap = isSmall ? 20 : isMid ? 40 : 120;
   const sideScale = 0.8;
-
-  // Keep font size closer to original — let text wrap, don't shrink aggressively
   const fontSize = isSmall ? 36 : isMid ? Math.max(40, Math.round(containerWidth * 0.055)) : 64;
-
-  const padding   = isSmall ? "24px 24px 40px" : isMid ? "32px 32px 48px" : "40px 40px 60px";
+  const padding = isSmall ? "24px 24px 40px" : isMid ? "32px 32px 48px" : "40px 40px 60px";
   const sectionPy = isSmall ? 40 : 80;
   return { cardW, gap, sideScale, fontSize, padding, sectionPy };
 }
 
-/* ── Infinite carousel ────────────────────────────────────────── */
-const N        = quotes.length;
+const N = quotes.length;
 const extended = [...quotes, ...quotes, ...quotes];
 
 const DURATION_MS = 1200;
 const INTERVAL_MS = 12000;
 
 export default function FeaturedQuotes() {
-  const [active, setActive]         = useState(N + 1);
-  const [animate, setAnimate]       = useState(true);
-  const [isHovered, setIsHovered]   = useState(false);
+  const [active, setActive] = useState(N + 1);
+  const [animate, setAnimate] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
   const [containerW, setContainerW] = useState(980);
 
-  const snapPending  = useRef(false);
+  const snapPending = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const dragStartXRef = useRef(0);
   const dragDeltaRef = useRef(0);
   const isDraggingRef = useRef(false);
 
-  /* ── Track container width ────────────────────────────────────── */
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -136,24 +141,22 @@ export default function FeaturedQuotes() {
     return () => ro.disconnect();
   }, []);
 
-  /* ── Auto-advance — pauses while hovered ─────────────────────── */
   useEffect(() => {
     if (isHovered) return;
     const id = setInterval(() => {
       if (snapPending.current) return;
       setAnimate(true);
-      setActive(prev => prev + 1);
+      setActive((prev) => prev + 1);
     }, INTERVAL_MS);
     return () => clearInterval(id);
   }, [isHovered]);
 
-  /* ── Seamless wrap ────────────────────────────────────────────── */
   useEffect(() => {
     if (active >= N * 2) {
       snapPending.current = true;
       const t = setTimeout(() => {
         setAnimate(false);
-        setActive(prev => prev - N);
+        setActive((prev) => prev - N);
         snapPending.current = false;
       }, DURATION_MS + 80);
       return () => clearTimeout(t);
@@ -167,10 +170,9 @@ export default function FeaturedQuotes() {
     }
   }, [animate]);
 
-  /* ── Responsive layout ────────────────────────────────────────── */
   const { cardW, gap, sideScale, fontSize, padding, sectionPy } = getLayout(containerW);
-  const sideVisual  = cardW * sideScale;
-  const marginComp  = (cardW - sideVisual) / 2;
+  const sideVisual = cardW * sideScale;
+  const marginComp = (cardW - sideVisual) / 2;
 
   const dragThreshold = 48;
 
@@ -205,8 +207,7 @@ export default function FeaturedQuotes() {
     });
   }
 
-  /* ── Position calculation ─────────────────────────────────────── */
-  const widths   = extended.map((_, i) => (i === active ? cardW : sideVisual));
+  const widths = extended.map((_, i) => (i === active ? cardW : sideVisual));
   const centres: number[] = [];
   let xCursor = 0;
   widths.forEach((w, i) => {
@@ -239,9 +240,7 @@ export default function FeaturedQuotes() {
             justifyContent: "center",
             gap: `${gap}px`,
             transform: `translateX(${translateX}px)`,
-            transition: animate
-              ? `transform ${DURATION_MS}ms cubic-bezier(0.4,0,0.2,1)`
-              : "none",
+            transition: animate ? `transform ${DURATION_MS}ms cubic-bezier(0.4,0,0.2,1)` : "none",
           }}
         >
           {extended.map((quote, i) => {
@@ -249,7 +248,7 @@ export default function FeaturedQuotes() {
             return (
               <div
                 key={i}
-                className="flex-shrink-0 relative"
+                className="relative flex-shrink-0"
                 onClick={!isActive ? () => {
                   if (snapPending.current) return;
                   setAnimate(true);
@@ -259,7 +258,7 @@ export default function FeaturedQuotes() {
                   width: `${cardW}px`,
                   transform: isActive ? "scale(1)" : `scale(${sideScale})`,
                   transformOrigin: "center center",
-                  marginLeft:  isActive ? "0" : `-${marginComp}px`,
+                  marginLeft: isActive ? "0" : `-${marginComp}px`,
                   marginRight: isActive ? "0" : `-${marginComp}px`,
                   cursor: isActive ? "default" : "pointer",
                   transition: animate
@@ -267,23 +266,12 @@ export default function FeaturedQuotes() {
                     : "none",
                 }}
               >
-                <div
-                  className="relative w-full"
-                  style={{
-                    backgroundColor: "#F7F7F7",
-                    padding,
-                  }}
-                >
-                  <p
-                    className="type-ui font-body text-center"
-                    style={{ color: "#575757", marginBottom: "16px", lineHeight: 1 }}
-                  >
+                <div className="relative w-full" style={{ backgroundColor: "#F7F7F7", padding }}>
+                  <FrameOverlay />
+                  <p className="type-ui font-body text-center" style={{ color: "#575757", marginBottom: "16px", lineHeight: 1 }}>
                     {quote.attribution}
                   </p>
-                  <p
-                    className="font-heading uppercase text-dark text-center"
-                    style={{ fontSize: `${fontSize}px`, lineHeight: 1.1, letterSpacing: `${fontSize * -0.02}px` }}
-                  >
+                  <p className="font-heading uppercase text-dark text-center" style={{ fontSize: `${fontSize}px`, lineHeight: 1.1, letterSpacing: `${fontSize * -0.02}px` }}>
                     {quote.text}
                   </p>
                 </div>

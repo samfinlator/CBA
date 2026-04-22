@@ -57,6 +57,48 @@ const stats: Stat[] = [
   },
 ];
 
+const GRID_LINE = "#E9E9E9";
+
+function GridOverlay({ compact }: { compact: boolean }) {
+  const verticals = compact ? [50] : [100 / 3, (100 / 3) * 2];
+  const horizontals = compact ? [100 / 3, (100 / 3) * 2] : [50];
+
+  return (
+    <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1.5, backgroundColor: GRID_LINE }} />
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1.5, backgroundColor: GRID_LINE }} />
+
+      {verticals.map((left, index) => (
+        <div key={`v-${index}`}>
+          <div style={{ position: "absolute", left: `${left}%`, top: 0, bottom: 0, width: 1.5, backgroundColor: GRID_LINE, transform: "translateX(-0.75px)" }} />
+          <img src="/assets/connector-t-down.svg" alt="" style={{ position: "absolute", left: `calc(${left}% - 10px)`, top: -0.5, width: 20, height: 12 }} />
+          <img src="/assets/connector-t-up.svg" alt="" style={{ position: "absolute", left: `calc(${left}% - 10px)`, bottom: -0.5, width: 20, height: 12 }} />
+        </div>
+      ))}
+
+      {horizontals.map((top, rowIndex) => (
+        <div key={`h-${rowIndex}`}>
+          <div style={{ position: "absolute", top: `${top}%`, left: 0, right: 0, height: 1.5, backgroundColor: GRID_LINE, transform: "translateY(-0.75px)" }} />
+          {verticals.map((left, colIndex) => (
+            <img
+              key={`c-${rowIndex}-${colIndex}`}
+              src="/assets/connector-cross.svg"
+              alt=""
+              style={{
+                position: "absolute",
+                left: `calc(${left}% - 10px)`,
+                top: `calc(${top}% - 10px)`,
+                width: 20,
+                height: 20,
+              }}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function CompactStatCard({ stat, isLeftColumn }: { stat: Stat; isLeftColumn: boolean }) {
   return (
     <div
@@ -68,13 +110,7 @@ function CompactStatCard({ stat, isLeftColumn }: { stat: Stat; isLeftColumn: boo
         paddingRight: isLeftColumn ? "20px" : "0px",
       }}
     >
-      <div
-        className="flex flex-col items-start"
-        style={{
-          width: "100%",
-          gap: 10,
-        }}
-      >
+      <div className="flex flex-col items-start" style={{ width: "100%", gap: 10 }}>
         <div className="flex items-center justify-start" style={{ width: 96, height: 96 }}>
           <img
             src={stat.icon}
@@ -98,14 +134,9 @@ function CompactStatCard({ stat, isLeftColumn }: { stat: Stat; isLeftColumn: boo
             }}
           >
             {stat.value}
-            {stat.suffix && (
-              <span style={{ fontSize: "0.55em", verticalAlign: "super" }}>{stat.suffix}</span>
-            )}
+            {stat.suffix && <span style={{ fontSize: "0.55em", verticalAlign: "super" }}>{stat.suffix}</span>}
           </p>
-          <p
-            className="type-stat-label whitespace-pre-line"
-            style={{ margin: 0, fontSize: 16, lineHeight: 1.35, textAlign: "left", whiteSpace: "normal" }}
-          >
+          <p className="type-stat-label whitespace-pre-line" style={{ margin: 0, fontSize: 16, lineHeight: 1.35, textAlign: "left", whiteSpace: "normal" }}>
             {stat.label}
           </p>
         </div>
@@ -116,24 +147,9 @@ function CompactStatCard({ stat, isLeftColumn }: { stat: Stat; isLeftColumn: boo
 
 function DesktopStatCard({ stat }: { stat: Stat }) {
   return (
-    <div
-      className="flex h-full items-start"
-      style={{
-        gap: 24,
-        minHeight: 224,
-        padding: "32px",
-      }}
-    >
+    <div className="flex h-full items-start" style={{ gap: 24, minHeight: 224, padding: "32px" }}>
       <div className="flex flex-shrink-0 items-center justify-center" style={{ width: 120, height: 120 }}>
-        <img
-          src={stat.icon}
-          alt=""
-          style={{
-            width: stat.iconWidth ?? 85,
-            height: stat.iconHeight ?? 85,
-            display: "block",
-          }}
-        />
+        <img src={stat.icon} alt="" style={{ width: stat.iconWidth ?? 85, height: stat.iconHeight ?? 85, display: "block" }} />
       </div>
 
       <div className="flex min-w-0 flex-col justify-start" style={{ gap: 14, paddingTop: 8 }}>
@@ -147,9 +163,7 @@ function DesktopStatCard({ stat }: { stat: Stat }) {
           }}
         >
           {stat.value}
-          {stat.suffix && (
-            <span style={{ fontSize: "0.55em", verticalAlign: "super" }}>{stat.suffix}</span>
-          )}
+          {stat.suffix && <span style={{ fontSize: "0.55em", verticalAlign: "super" }}>{stat.suffix}</span>}
         </p>
         <p className="type-stat-label whitespace-pre-line" style={{ margin: 0, maxWidth: 240 }}>
           {stat.label}
@@ -180,19 +194,20 @@ export default function TheNumbers() {
       <div ref={containerRef} className="mx-auto max-w-[1432px]">
         <h2 className="type-section-heading mb-5">The Numbers</h2>
 
-        <div style={{ backgroundColor: "var(--color-page)" }}>
+        <div className="relative" style={{ backgroundColor: "var(--color-page)" }}>
+          <GridOverlay compact={isCompact} />
           {!isCompact ? (
-              <div className="grid grid-cols-3">
-                {stats.map((stat) => (
-                  <DesktopStatCard key={stat.label} stat={stat} />
-                ))}
-              </div>
+            <div className="relative grid grid-cols-3">
+              {stats.map((stat) => (
+                <DesktopStatCard key={stat.label} stat={stat} />
+              ))}
+            </div>
           ) : (
-              <div className="grid grid-cols-2">
-                {stats.map((stat, index) => (
-                  <CompactStatCard key={stat.label} stat={stat} isLeftColumn={index % 2 === 0} />
-                ))}
-              </div>
+            <div className="relative grid grid-cols-2">
+              {stats.map((stat, index) => (
+                <CompactStatCard key={stat.label} stat={stat} isLeftColumn={index % 2 === 0} />
+              ))}
+            </div>
           )}
         </div>
       </div>
