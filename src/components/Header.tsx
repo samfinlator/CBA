@@ -13,7 +13,7 @@ const MASK: React.CSSProperties = {
 };
 
 const LINES = ["Campbell", "Brown", "Associates"];
-const GET_IN_TOUCH_LABEL = "Get In Touch";
+const GET_IN_TOUCH_LABEL = "Get In\u00A0Touch";
 const HOME_LABEL = "Home";
 const CTA_FONT_WEIGHT = 700;
 const CTA_LINE_HEIGHT = 1;

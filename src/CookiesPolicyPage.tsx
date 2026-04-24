@@ -6,7 +6,7 @@ import { GRADIENT_SEED, GRADIENT_START_TIME } from "./gradientConfig";
 
 function PolicySection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-3 border-t border-[#E9E9E9] pt-6">
+    <section className="flex flex-col gap-3 pt-6">
       <h2 className="font-body" style={{ margin: 0, fontSize: 20, fontWeight: 700, lineHeight: 1.15 }}>
         {title}
       </h2>
@@ -27,7 +27,6 @@ export default function CookiesPolicyPage() {
       <main className="bg-page px-5 pb-[80px] pt-[140px] md:px-10">
         <div className="mx-auto flex max-w-[880px] flex-col gap-8">
           <header className="flex flex-col gap-3">
-            <p className="type-ui" style={{ margin: 0, color: "rgba(24,24,24,0.6)" }}>Policy</p>
             <h1 className="type-section-heading" style={{ margin: 0 }}>Cookies Policy</h1>
             <p className="type-body-lg" style={{ margin: 0, maxWidth: 720 }}>
               This Cookies Policy explains how Campbell Brown Associates Ltd uses cookies and similar technologies on this website.

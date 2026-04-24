@@ -25,7 +25,7 @@ function CtaButton() {
         <span className="absolute inset-0" style={{ borderRadius: 2, overflow: "hidden" }}>
           <GradientMirror className="absolute inset-0 h-full w-full" />
         </span>
-        <span className="relative z-10">Get In Touch</span>
+        <span className="relative z-10">Get In&nbsp;Touch</span>
       </span>
     </a>
   );
@@ -59,7 +59,7 @@ export default function GetInTouch() {
             >
               IT&rsquo;S NEVER JUST BUSINESS,
               <br />
-              IT&rsquo;S ALWAYS PERSONAL.
+              IT&rsquo;S ALWAYS&nbsp;PERSONAL.
             </h3>
 
             <CtaButton />

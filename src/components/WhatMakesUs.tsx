@@ -12,31 +12,31 @@ const values: Value[] = [
     label: "Empathy",
     color: "#0073FF",
     description:
-      "We support every candidate with sensitivity and counsel, particularly those missing out on roles they set their hearts on.",
+      "We support every candidate with sensitivity and counsel, particularly those missing out on roles they set their hearts\u00A0on.",
   },
   {
     label: "Tenacity",
     color: "#E53333",
     description:
-      "We keep the process moving. Re-engaging candidates, managing dropouts and solving problems until the role is filled.",
+      "We keep the process moving. Re-engaging candidates, managing dropouts and solving problems until the role is\u00A0filled.",
   },
   {
     label: "Flexibility",
     color: "#53B2A8",
     description:
-      "No two briefs are the same. We adapt to your process, your timeline and your priorities. Without compromising quality.",
+      "No two briefs are the same. We adapt to your process, your timeline and your priorities. Without compromising\u00A0quality.",
   },
   {
     label: "Integrity",
     color: "#FFBA00",
     description:
-      "Honest with clients, honest with candidates. We give it to you straight even when it's not what you want to hear.",
+      "Honest with clients, honest with candidates. We give it to you straight even when it's not what you want to\u00A0hear.",
   },
   {
     label: "Intuition",
     color: "#D900D9",
     description:
-      "Pattern recognition built over decades. Knowing which candidate will thrive before anyone else does.",
+      "Pattern recognition built over decades. Knowing which candidate will thrive before anyone else\u00A0does.",
   },
 ];
 
@@ -314,7 +314,7 @@ export default function WhatMakesUs() {
   return (
     <section className="px-5 py-[80px] md:px-10">
       <div ref={containerRef} className="mx-auto max-w-[1432px]">
-        <h2 className="type-section-heading mb-5">What Makes Us</h2>
+        <h2 className="type-section-heading mb-5">What Makes&nbsp;Us</h2>
 
         <div className="relative" style={{ backgroundColor: "var(--color-page)" }}>
           <div
@@ -329,10 +329,10 @@ export default function WhatMakesUs() {
             <div style={{ width: isDesktop ? narrativeW : "100%", flex: isDesktop ? "1 1 auto" : undefined, minWidth: 0, flexShrink: 0 }}>
               <div className="flex flex-col gap-8">
                 <p className="type-body-lg" style={{ margin: 0 }}>
-                  Our personal, face-to-face approach sets us apart from other firms.
+                  Our personal, face-to-face approach sets us apart from other&nbsp;firms.
                 </p>
                 <p className="type-body-lg" style={{ margin: 0 }}>
-                  Executive search is becoming increasingly automated, but there is a real demand for personal, human qualities. This is the service we provide to client and candidate alike.
+                  Executive search is becoming increasingly automated, but there is a real demand for personal, human qualities. This is the service we provide to client and candidate&nbsp;alike.
                 </p>
               </div>
             </div>

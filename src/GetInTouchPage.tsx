@@ -200,7 +200,7 @@ export default function GetInTouchPage() {
             style={viewportW < 900 ? { paddingBlock: "24px", paddingInline: "10px", gap: "18px" } : { padding: "40px" }}
           >
             <span className="font-heading uppercase text-white block" style={{ fontSize: viewportW < 900 ? "clamp(34px, 12vw, 52px)" : "clamp(64px, 8vw, 112px)", lineHeight: 0.92 }}>
-              Get In Touch.
+              Get In&nbsp;Touch.
             </span>
           </div>
         </div>
@@ -216,7 +216,7 @@ export default function GetInTouchPage() {
                 </p>
               </div>
 
-              <div className="relative bg-[#F7F7F7]" style={{ padding: viewportW < 900 ? "28px 20px 32px" : "32px 28px 36px" }}>
+              <div className="relative bg-[#F7F7F7]" style={{ padding: viewportW < 900 ? "28px 20px 32px" : "0 28px 36px" }}>
                 <form className="relative z-10 flex flex-col gap-5" onSubmit={handleSubmit}>
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="flex flex-col gap-2">
@@ -323,7 +323,7 @@ export default function GetInTouchPage() {
               </div>
 
               <div className="lg:col-span-2" style={{ marginTop: 12 }}>
-                <h2 className="type-section-heading mb-5">Speak To The Team</h2>
+                <h2 className="type-section-heading mb-5">Speak To The&nbsp;Team</h2>
                 <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                   {contacts.map((contact) => (
                     <ContactCard key={contact.name} {...contact} />

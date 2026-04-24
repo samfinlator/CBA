@@ -53,7 +53,7 @@ export default function Hero() {
                 className="font-heading uppercase text-white block"
                 style={{ fontSize: mobileHeadlineSize, lineHeight: 0.92, margin: 0 }}
               >
-                Unmatched Network.
+                Unmatched&nbsp;Network.
               </span>
               <span
                 className="font-heading uppercase text-white block"
@@ -65,7 +65,7 @@ export default function Hero() {
                   alignSelf: "stretch",
                 }}
               >
-                Always Bespoke.
+                Always&nbsp;Bespoke.
               </span>
             </div>
 
@@ -81,7 +81,7 @@ export default function Hero() {
             >
               16 years placing top finance talent
               <br />
-              for cutting edge clients
+              for cutting edge&nbsp;clients
             </p>
           </>
         ) : (
@@ -90,7 +90,7 @@ export default function Hero() {
               className="font-heading uppercase text-white block"
               style={{ fontSize: desktopHeadlineSize, lineHeight: 0.92, whiteSpace: "nowrap" }}
             >
-              Unrivalled Results. Unmatched Network.
+              Unrivalled Results. Unmatched&nbsp;Network.
             </span>
 
             <div
@@ -103,14 +103,14 @@ export default function Hero() {
               >
                 16 years placing top finance talent
                 <br />
-                for cutting edge clients
+                for cutting edge&nbsp;clients
               </p>
 
               <span
                 className="font-heading uppercase text-white"
                 style={{ fontSize: desktopHeadlineSize, lineHeight: 0.92 }}
               >
-                Always Bespoke.
+                Always&nbsp;Bespoke.
               </span>
             </div>
           </>

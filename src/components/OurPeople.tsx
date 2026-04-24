@@ -271,6 +271,18 @@ function MobilePersonRow({
             </a>
           </div>
         </div>
+        <img
+          src="/assets/connector-cross.svg"
+          alt=""
+          aria-hidden="true"
+          style={{
+            width: 20,
+            height: 20,
+            flexShrink: 0,
+            transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
+            transition: `transform ${T}ms ease-in-out`,
+          }}
+        />
       </div>
 
       {/* Bio — expands below on tap */}

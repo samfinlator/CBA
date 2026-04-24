@@ -13,14 +13,14 @@ const stats: Stat[] = [
   {
     value: "94",
     suffix: "%",
-    label: "Fill rate, retained",
+    label: "Fill rate,\u00A0retained",
     icon: "/assets/stat-94.svg",
     iconWidth: 94,
     iconHeight: 94,
   },
   {
     value: "3",
-    label: "Expert consultants",
+    label: "Expert\u00A0consultants",
     icon: "/assets/stat-icon.svg",
     iconWidth: 116,
     iconHeight: 116,
@@ -28,14 +28,14 @@ const stats: Stat[] = [
   {
     value: "89",
     suffix: "%",
-    label: "Referral & repeat businesses",
+    label: "Referral & repeat\u00A0businesses",
     icon: "/assets/stat-ring.svg",
     iconWidth: 104,
     iconHeight: 104,
   },
   {
     value: "76",
-    label: "Years industry experience",
+    label: "Years industry\u00A0experience",
     icon: "/assets/stat-grid.svg",
     iconWidth: 85,
     iconHeight: 85,
@@ -43,14 +43,14 @@ const stats: Stat[] = [
   {
     value: "86",
     suffix: "%",
-    label: "of placements stay 2+ years\n(industry average is 62%)",
+    label: "of placements stay 2+ years\n(industry average is\u00A062%)",
     icon: "/assets/stat-86.svg",
     iconWidth: 85,
     iconHeight: 85,
   },
   {
     value: "0",
-    label: "Shortlist fees",
+    label: "Shortlist\u00A0fees",
     icon: "/assets/stat-dollar.svg",
     iconWidth: 65,
     iconHeight: 93,
@@ -110,8 +110,8 @@ function CompactStatCard({ stat, isLeftColumn }: { stat: Stat; isLeftColumn: boo
         paddingRight: isLeftColumn ? "20px" : "0px",
       }}
     >
-      <div className="flex flex-col items-start" style={{ width: "100%", gap: 10 }}>
-        <div className="flex items-center justify-start" style={{ width: 96, height: 96 }}>
+      <div className="flex flex-col items-start" style={{ width: "100%", gap: 12 }}>
+        <div className="flex items-start justify-start" style={{ width: 96, height: 112, paddingTop: 12 }}>
           <img
             src={stat.icon}
             alt=""
@@ -192,7 +192,7 @@ export default function TheNumbers() {
   return (
     <section className="px-5 py-[80px] md:px-10">
       <div ref={containerRef} className="mx-auto max-w-[1432px]">
-        <h2 className="type-section-heading mb-5">The Numbers</h2>
+        <h2 className="type-section-heading mb-5">The&nbsp;Numbers</h2>
 
         <div className="relative" style={{ backgroundColor: "var(--color-page)" }}>
           <GridOverlay compact={isCompact} />

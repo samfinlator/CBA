@@ -42,15 +42,15 @@ export default function About() {
                     in senior financial, strategic, operational and non executive
                     appointments. Our principal expertise is within TV, publishing
                     and marketing services, with an increasing focus on the
-                    technology and tech-enabled and branded consumer sectors.
+                    technology and tech-enabled and branded consumer&nbsp;sectors.
                   </p>
                   <p className="type-body-lg">
-                    We increasingly help clients build out Chair and NED benches.
+                    We increasingly help clients build out Chair and NED&nbsp;benches.
                   </p>
                   <p className="type-body-lg">
                     Our footprint spans the org chart, from CFO to Financial
                     Accountant, via Financial Controller, Commercial Finance Manager
-                    and everything in between.
+                    and everything in&nbsp;between.
                   </p>
                 </div>
               </div>
@@ -66,12 +66,12 @@ export default function About() {
                   in senior financial, strategic, operational and non executive
                   appointments. Our principal expertise is within TV, publishing
                   and marketing services, with an increasing focus on the
-                  technology and tech-enabled and branded consumer sectors.
+                  technology and tech-enabled and branded consumer&nbsp;sectors.
                 </p>
                 <p className="type-body-lg">
                   Our footprint spans the org chart, from CFO to Financial
                   Accountant, via Financial Controller, Commercial Finance Manager
-                  and everything in between.
+                  and everything in&nbsp;between.
                 </p>
               </div>
             </div>

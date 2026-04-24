@@ -30,9 +30,11 @@ const GradientPhrase = ({ children }: { children: React.ReactNode }) => {
       const rect = el.getBoundingClientRect();
       const viewportW = document.documentElement.clientWidth || window.innerWidth || 1;
       const viewportH = document.documentElement.clientHeight || window.innerHeight || 1;
+      const bleedX = Math.max(160, rect.width);
+      const gradientW = viewportW + bleedX * 2;
       el.style.backgroundImage = "linear-gradient(90deg, #ff0cf0, #ffb103, #00b5fc)";
-      el.style.backgroundSize = `${viewportW}px ${viewportH}px`;
-      el.style.backgroundPosition = `${-rect.left}px ${-rect.top}px`;
+      el.style.backgroundSize = `${gradientW}px ${viewportH}px`;
+      el.style.backgroundPosition = `${-(rect.left + bleedX)}px ${-rect.top}px`;
       raf = requestAnimationFrame(update);
     };
 
@@ -49,8 +51,7 @@ const GradientPhrase = ({ children }: { children: React.ReactNode }) => {
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
-        paddingRight: "0.08em",
-        marginRight: "-0.08em",
+        paddingInline: "0.04em",
       }}
     >
       {children}
